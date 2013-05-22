@@ -1,4 +1,6 @@
-scala-force-layout
-==================
+# scala-force-layout
 
-Force-directed graph layout implementation for Scala
+A force-directed graph layout implementation for Scala.
+
+![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
+

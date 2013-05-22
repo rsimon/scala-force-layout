@@ -1,0 +1,3 @@
+The file 'miserables.json' contains the graph sample used in the D3.js force-directed graph demo:
+
+http://bl.ocks.org/mbostock/4062045

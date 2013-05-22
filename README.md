@@ -6,16 +6,13 @@ graph layout code by Dennis Hotson. But I'm working on including ideas from othe
 
 ![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
 
-## Building From Source & Running the Example
+## Building From Source & Running the Examples
 
 _Scala Force Layout_ uses [SBT](http://www.scala-sbt.org/) as a build tool. Please refer to the
 [SBT documentation](http://www.scala-sbt.org/release/docs/index.html) for instructions on how to
-install SBT on your machine.
-
-Once you have installed SBT, you can run the example by typing ``sbt run``.
-
-To build a .jar package type ``sbt package``. To generate a project for the [Eclipse IDE](http://www.eclipse.org/),
-type ``sbt eclipse``.
+install SBT on your machine. Once you have installed SBT, you can run the examples by typing ``sbt run``. 
+To build a .jar package type ``sbt package``. To generate a project for the 
+[Eclipse IDE](http://www.eclipse.org/), type ``sbt eclipse``.
 
 ## API
 
@@ -43,7 +40,7 @@ Run the layout algorithm using the ``graph.doLayout()`` method. You can attach `
       .onComplete(it => { println("completed in " + it + " iterations") })
       .doLayout()
       
-The ``GraphRenderer`` utility provides a simple way to render an image of your graph. E.g. if all you
+The ``GraphRenderer`` is a simply utility for rendering an image of your graph. If all you
 want is to store an image of the final layout, this is what you're looking for:
 
     graph
@@ -52,6 +49,9 @@ want is to store an image of the final layout, this is what you're looking for:
         ImageIO.write(image, "png", new File("my-graph.png"))
       })
       .doLayout()
+      
+You may also want to take a look at the [Hello World](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/HelloWorld.scala)
+for a full code example. 
 
 ## To Do
 

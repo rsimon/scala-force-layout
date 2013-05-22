@@ -37,7 +37,6 @@ object HelloWorld extends App {
     .onIteration(it => imgLabel.setIcon(new ImageIcon(GraphRenderer.drawGraph(graph, 500, 500))))
     .onComplete(it => { 
       println("completed in " + it + " iterations")
-      ImageIO.write(GraphRenderer.drawGraph(graph, 500, 500), "png", new File("final-graph.png"))
     })
     .doLayout()
 

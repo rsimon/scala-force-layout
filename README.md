@@ -19,16 +19,16 @@ To build a .jar package type ``sbt package``. To generate a project for the
 Create a graph as a collection of __nodes__ and __edges__.
 
     val nodes = Seq(
-        new Node("A", "Node A"),
-        new Node("B", "Node B"),
-        new Node("C", "Node C"),
-        new Node("D", "Node D"))
+        Node("A", "Node A"),
+        Node("B", "Node B"),
+        Node("C", "Node C"),
+        Node("D", "Node D"))
       
     val edges = Seq(
-        new Edge(nodes(0), nodes(1)),
-        new Edge(nodes(1), nodes(2)),
-        new Edge(nodes(2), nodes(3)),
-        new Edge(nodes(0), nodes(3)))
+        Edge(nodes(0), nodes(1)),
+        Edge(nodes(1), nodes(2)),
+        Edge(nodes(2), nodes(3)),
+        Edge(nodes(0), nodes(3)))
       
     val graph = new SpringGraph(nodes, edges)
     

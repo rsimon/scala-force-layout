@@ -6,15 +6,61 @@ graph layout code by Dennis Hotson. But I'm working on including ideas from othe
 
 ![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
 
-## Pre-Requisites & Running the Example
+## Building From Source & Running the Example
+
+_Scala Force Layout_ uses [SBT](http://www.scala-sbt.org/) as a build tool. Please refer to the
+[SBT documentation](http://www.scala-sbt.org/release/docs/index.html) for instructions on how to
+install SBT on your machine.
+
+Once you have installed SBT, you can run the example by typing ``sbt run``.
+
+To build a .jar package type ``sbt package``. To generate a project for the [Eclipse IDE](http://www.eclipse.org/),
+type ``sbt eclipse``.
 
 ## API
 
-todo...
+Create a graph as a collection of __nodes__ and __edges__.
+
+    val nodes = Seq(
+        new Node("A", "Node A"),
+        new Node("B", "Node B"),
+        new Node("C", "Node C"),
+        new Node("D", "Node D"))
+      
+    val edges = Seq(
+        new Edge(nodes(0), nodes(1)),
+        new Edge(nodes(1), nodes(2)),
+        new Edge(nodes(2), nodes(3)),
+        new Edge(nodes(0), nodes(3)))
+      
+    val graph = new SpringGraph(nodes, edges)
+    
+Run the layout algorithm using the ``graph.doLayout()`` method. You can attach ``onIteration`` and
+``onComplete`` handlers to capture intermediate and final results of the layout process.
+
+    graph
+      .onIteration(it => { ... do something on every layout iteration ... })
+      .onComplete(it => { println("completed in " + it + " iterations") })
+      .doLayout()
+      
+The ``GraphRenderer`` utility provides a simple way to render an image of your graph. E.g. if all you
+want is to store an image of the final layout, this is what you're looking for:
+
+    graph
+      .onComplete(it => {
+        val image = GraphRenderer.drawGraph(graph, 500, 500)
+        ImageIO.write(image, "png", new File("my-graph.png"))
+      })
+      .doLayout()
 
 ## To Do
 
-todo...
+There are many things that could be done - feel free to help out if you care ;-)
+
+* Create a renderer that produces an interactive graph.
+* Implement [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation) to speed up computation.
+* Align API with the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model
+* More & better styling options
 
 ## License
 

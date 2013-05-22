@@ -28,7 +28,7 @@ object GraphRenderer {
       
   private lazy val palette = colorScale ++ colorScale ++ colorScale      
   
-  def drawGraph(graph: SpringyGraph, width: Int, height: Int, showLabels: Boolean = false): BufferedImage = {
+  def drawGraph(graph: SpringGraph, width: Int, height: Int, showLabels: Boolean = false): BufferedImage = {
     // Set up image canvas
     val image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val g = image.getGraphics.asInstanceOf[Graphics2D]

@@ -9,7 +9,7 @@ import java.awt.Dimension
 import javax.swing.JLabel
 import at.ait.dme.forcelayout.GraphRenderer
 import at.ait.dme.forcelayout.Node
-import at.ait.dme.forcelayout.SpringyGraph
+import at.ait.dme.forcelayout.SpringGraph
 import rapture.io.JsonExtractor.intJsonExtractor
 import rapture.io.JsonExtractor.listJsonExtractor
 import rapture.io.JsonExtractor.stringJsonExtractor
@@ -31,7 +31,7 @@ object LesMiserables extends App {
     Edge(nodes(json.source.get[Int]), nodes(json.target.get[Int]), value.toDouble)
   })
     
-  val graph = new SpringyGraph(nodes, edges) 
+  val graph = new SpringGraph(nodes, edges) 
    
   val frame = new JFrame()
   frame.setPreferredSize(new Dimension(800,800))

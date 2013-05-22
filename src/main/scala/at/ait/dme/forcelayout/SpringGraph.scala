@@ -9,7 +9,7 @@ import scala.util.Random
  * library VivaGraphJS (https://github.com/anvaka/VivaGraphJS).
  * @author Rainer Simon <rainer.simon@ait.ac.at>
  */
-class SpringyGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
+class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
 
   /** Repulsion constant **/
   private val REPULSION = 50.0
@@ -35,17 +35,17 @@ class SpringyGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   /**
    * Adds an onComplete event handler.
    */
-  def onComplete(callback: Int => Unit): SpringyGraph = {
+  def onComplete(callback: Int => Unit): SpringGraph = {
     onComplete = Some(callback)
-    this
+    SpringGraph.this
   }
   
   /**
    * Adds an onIteration event handler
    */
-  def onIteration(callback: Int => Unit): SpringyGraph = {
+  def onIteration(callback: Int => Unit): SpringGraph = {
     onIteration = Some(callback) 
-    this
+    SpringGraph.this
   } 
  
   def doLayout(maxIterations: Int = 10000) = {

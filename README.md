@@ -1,6 +1,6 @@
 # Scala Force Layout
 
-_Scala Force Layout_ is a force-directed graph layout implementation for Scala, based on a basic spring 
+_Scala Force Layout_ is a force-directed graph layout implementation in Scala, based on a basic spring 
 physics model. To a wide extent, this code is a port of the [Springy](http://getspringy.com/) JavaScript 
 graph layout code by Dennis Hotson. But I'm working on including ideas from other libraries as well.  
 
@@ -53,18 +53,19 @@ want is to store an image of the final layout, this is what you're looking for:
       })
       .doLayout()
       
-You may also want to take a look at the [Hello World](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/HelloWorld.scala)
-for a full code example. 
+You may also want to take a look at the [Hello World 
+example](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/HelloWorld.scala)
+for complete, working code. 
 
 ## Future Work
 
-There are many things on the list - feel free to help out if you care!
+There are many things on the list - feel free to help out if you care to!
 
-* __The last thing we need is another graph API.__ Use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model!
-* __Mutable state, everywhere.__ From a Scala perspective, this code is really ugly and needs to be made more functional & idiomatic! 
-* __Speed is of the essence.__ Improve performance via [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation)!
-* __Where can I click?__ Create a renderer that produces an interactive graph!
-* __Yeah, but I want my labels green!__ Add a mechanism for fill, line and font style!
+* "The last thing we need is another graph API." _// TODO use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model_
+* "Mutable state, everywhere." _// TODO the code is really ugly and needs to be made more functional & Scala-idiomatic_ 
+* "Speed is of the essence." _// TODO improve performance via [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation)_
+* "Where can I click?" _// TODO create a renderer that produces an interactive graph_
+* "Yeah, but I want my labels green!" _// TODO add a mechanism to control fill, line and font style_
 
 ## License
 

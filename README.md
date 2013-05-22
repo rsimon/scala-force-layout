@@ -2,7 +2,7 @@
 
 _Scala Force Layout_ is a force-directed graph layout implementation for Scala, based on a basic spring 
 physics model. To a wide extent, this code is a port of the [Springy](http://getspringy.com/) JavaScript 
-library by Dennis Hotson. But I'm working on including ideas from other libraries as well.  
+graph layout code by Dennis Hotson. But I'm working on including ideas from other libraries as well.  
 
 ![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
 

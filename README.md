@@ -40,12 +40,15 @@ Run the layout algorithm using the ``graph.doLayout()`` method. You can attach `
       .onComplete(it => { println("completed in " + it + " iterations") })
       .doLayout()
       
-The ``GraphRenderer`` is a simply utility for rendering an image of your graph. If all you
+The ``GraphRenderer`` is a simple utility for rendering an image of your graph. If all you
 want is to store an image of the final layout, this is what you're looking for:
 
     graph
       .onComplete(it => {
+        // Renders a 500x500 pixel image of the final graph layout  
         val image = GraphRenderer.drawGraph(graph, 500, 500)
+        
+        // Writes the image to a PNG file
         ImageIO.write(image, "png", new File("my-graph.png"))
       })
       .doLayout()
@@ -53,7 +56,7 @@ want is to store an image of the final layout, this is what you're looking for:
 You may also want to take a look at the [Hello World](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/HelloWorld.scala)
 for a full code example. 
 
-## TODO
+## Future Work
 
 There are many things on the list - feel free to help out if you care!
 

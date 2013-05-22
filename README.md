@@ -19,10 +19,10 @@ To build a .jar package type ``sbt package``. To generate a project for the
 Create a graph as a collection of __nodes__ and __edges__.
 
     val nodes = Seq(
-        Node("A", "Node A"),
-        Node("B", "Node B"),
-        Node("C", "Node C"),
-        Node("D", "Node D"))
+        Node("id_a", "Node A"),
+        Node("id_b", "Node B"),
+        Node("id_c", "Node C"),
+        Node("id_d", "Node D"))
       
     val edges = Seq(
         Edge(nodes(0), nodes(1)),

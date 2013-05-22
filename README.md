@@ -53,14 +53,15 @@ want is to store an image of the final layout, this is what you're looking for:
 You may also want to take a look at the [Hello World](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/HelloWorld.scala)
 for a full code example. 
 
-## To Do
+## TODO
 
-There are many things that could be done - feel free to help out if you care ;-)
+There are many things on the list - feel free to help out if you care!
 
-* Create a renderer that produces an interactive graph.
-* Implement [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation) to speed up computation.
-* Align API with the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model
-* More & better styling options
+* __The last thing we need is another graph API.__ Use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model!
+* __Mutable state, everywhere.__ From a Scala perspective, this code is really ugly and needs to be made more functional & idiomatic! 
+* __Speed is of the essence.__ Improve performance via [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation)!
+* __Where can I click?__ Create a renderer that produces an interactive graph!
+* __Yeah, but I want my labels green!__ Add a mechanism for fill, line and font style!
 
 ## License
 

@@ -8,6 +8,7 @@ import java.awt.BasicStroke
 import java.awt.geom.Line2D
 import java.awt.geom.Ellipse2D
 import scala.util.Random
+import java.awt.Point
 
 /**
  * A graph drawing utility. 
@@ -26,7 +27,19 @@ object GraphRenderer {
       new Color(188, 189, 34),
       new Color(23, 190, 207))
       
-  private lazy val palette = colorScale ++ colorScale ++ colorScale      
+  private lazy val palette = colorScale ++ colorScale ++ colorScale    
+  
+  def toGraphCoords(graph: SpringGraph, width: Int, height: Int, pt: Point): Vector = {
+    // Scale conversion factors
+    // TODO eliminate code duplication!
+    val (dx, dy) = (width / 2, height / 2)
+    val (minX, minY, maxX, maxY) = graph.getBounds
+    val c = Math.min(dx * 0.9 / Math.max(maxX, Math.abs(minX)), dy * 0.9 / Math.max(maxY, Math.abs(minY)))
+    
+    val gx = (pt.x - dx) / c
+    val gy = (pt.y - dy) / c   
+    Vector(gx, gy)
+  }
   
   def drawGraph(graph: SpringGraph, width: Int, height: Int, showLabels: Boolean = false): BufferedImage = {
     // Set up image canvas
@@ -41,7 +54,7 @@ object GraphRenderer {
     g.setPaint(Color.WHITE)
     image.getGraphics.fillRect(0, 0, width, height)
     
-    // Set up scale conversion factors
+    // Scale conversion factors
     val (dx, dy) = (width / 2, height / 2)
     val (minX, minY, maxX, maxY) = graph.getBounds
     val c = Math.min(dx * 0.9 / Math.max(maxX, Math.abs(minX)), dy * 0.9 / Math.max(maxY, Math.abs(minY)))

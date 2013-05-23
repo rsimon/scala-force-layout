@@ -18,7 +18,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private val STIFFNESS = 200.0
     
   /** Drag coefficient **/
-  private val DRAG = 10.0
+  private val DRAG = 20.0
   
   /** Time-step increment **/
   private val TIMESTEP = 0.02 / Math.log10(nodes.size)
@@ -55,17 +55,20 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
       if (onIteration.isDefined)
         onIteration.get.apply(it)
       it += 1
-    } while (getTotalEnergy() > Math.max(1, nodes.size / 100) && it < maxIterations)
+    } while (getTotalEnergy() > nodes.size && it < maxIterations)
       
     if (onComplete.isDefined)
       onComplete.get.apply(it)
   }
+  
+  def getNearestNode(pt: Vector) = nodes.map(node => (node, (node.pos - pt).magnitude)).sortBy(_._2).head._1
     
   private def iterate = {
     // Compute forces
     applyCoulombsLaw
     applyHookesLaw
     applyDrag
+    attractToCenter
     
     // Reset bounds
     minX = Int.MaxValue
@@ -113,6 +116,10 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   }
   
   private def applyDrag = nodes.foreach(node => node.acceleration -= node.velocity * DRAG)
+  
+  private def attractToCenter = {
+    nodes.foreach(node => node.acceleration -= node.pos * REPULSION / (10.0 * node.mass))
+  }
   
   def getTotalEnergy() = {
 	nodes.map(node => {

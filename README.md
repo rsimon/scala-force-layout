@@ -16,7 +16,7 @@ To build a .jar package type ``sbt package``. To generate a project for the
 
 ## API
 
-Create a graph as a collection of __nodes__ and __edges__.
+Create a graph from collections of __nodes__ and __edges__.
 
     val nodes = Seq(
         Node("id_a", "Node A"),
@@ -61,11 +61,11 @@ for complete, working code.
 
 There are many things on the list - feel free to help out if you care to!
 
-* "The last thing we need is another graph API." _// TODO use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model_
-* "Mutable state, everywhere." _// TODO the code is really ugly and needs to be made more functional & Scala-idiomatic_ 
-* "Speed is of the essence." _// TODO improve performance via [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation)_
-* "Where can I click?" _// TODO create a renderer that produces an interactive graph_
-* "Yeah, but I want my labels pink!" _// TODO add a mechanism to control fill, line and font style_
+* _"The last thing we need is another graph API."_ // TODO use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model
+* _"Mutable state, everywhere."_ // TODO the code is really ugly and needs to be made more functional & Scala-idiomatic
+* _"Speed is of the essence."_ // TODO improve performance via [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation)
+* _"Where can I click?"_ // TODO create a renderer that produces an interactive graph
+* _"Yeah, but I want my labels pink!"_ // TODO add a mechanism to control fill, line and font style
 
 ## License
 

@@ -18,10 +18,10 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private val STIFFNESS = 200.0
     
   /** Drag coefficient **/
-  private val DRAG = 30.0
+  private val DRAG = 10.0
   
   /** Time-step increment **/
-  private val TIMESTEP = 0.005
+  private val TIMESTEP = 0.02 / Math.log10(nodes.size)
   
   // TODO how can we change that to an immutable val?
   private var onComplete: Option[Int => Unit] = None

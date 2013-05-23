@@ -18,10 +18,10 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private val STIFFNESS = 200.0
     
   /** Drag coefficient **/
-  private val DRAG = 10.0
+  private val DRAG = 30.0
   
   /** Time-step increment **/
-  private val TIMESTEP = 0.01
+  private val TIMESTEP = 0.005
   
   // TODO how can we change that to an immutable val?
   private var onComplete: Option[Int => Unit] = None
@@ -55,7 +55,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
       if (onIteration.isDefined)
         onIteration.get.apply(it)
       it += 1
-    } while (getTotalEnergy() > 1 && it < maxIterations)
+    } while (getTotalEnergy() > Math.max(1, nodes.size / 100) && it < maxIterations)
       
     if (onComplete.isDefined)
       onComplete.get.apply(it)
@@ -101,7 +101,11 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   private def applyHookesLaw = {
     edges.foreach(spring => {  
-      val d = spring.to.pos - spring.from.pos
+      val d = if (spring.to.pos == spring.from.pos)
+          Vector.random(0.1, spring.from.pos)
+        else
+          spring.to.pos - spring.from.pos
+
       val displacement = d.magnitude - spring.length
       spring.from.acceleration += d.normalize * STIFFNESS * displacement * 0.5 / spring.from.mass
       spring.to.acceleration -= d.normalize * STIFFNESS * displacement * 0.5 / spring.to.mass
@@ -110,7 +114,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   private def applyDrag = nodes.foreach(node => node.acceleration -= node.velocity * DRAG)
   
-  private def getTotalEnergy() = {
+  def getTotalEnergy() = {
 	nodes.map(node => {
 	  val v = node.velocity.magnitude
 	  0.5 * node.mass * v * v

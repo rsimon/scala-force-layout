@@ -15,7 +15,7 @@ import java.awt.Point
  */
 object GraphRenderer {
       
-  private val colorScale = Seq(
+  private val palette = Seq(
       new Color(31, 119, 180),
       new Color(255, 127, 14),
       new Color(44, 160, 44),
@@ -27,22 +27,19 @@ object GraphRenderer {
       new Color(188, 189, 34),
       new Color(23, 190, 207))
       
-  private lazy val palette = colorScale ++ colorScale ++ colorScale    
-  
-  def toGraphCoords(graph: SpringGraph, width: Int, height: Int, pt: Point): Vector = {
-    // Scale conversion factors
-    // TODO eliminate code duplication!
-    val (dx, dy) = (width / 2, height / 2)
+  private def computeScale(graph: SpringGraph, width: Int, height: Int) = {
     val (minX, minY, maxX, maxY) = graph.getBounds
-    val c = Math.min(dx * 0.9 / Math.max(maxX, Math.abs(minX)), dy * 0.9 / Math.max(maxY, Math.abs(minY)))
-    
-    val gx = (pt.x - dx) / c
-    val gy = (pt.y - dy) / c   
+    Math.min(width / 2 * 0.9 / Math.max(maxX, Math.abs(minX)), height / 2 * 0.9 / Math.max(maxY, Math.abs(minY)))    
+  }
+        
+  def toGraphCoords(graph: SpringGraph, width: Int, height: Int, pt: Point): Vector = {
+    val c = computeScale(graph, width, height)
+    val gx = (pt.x - width / 2) / c
+    val gy = (pt.y - height / 2) / c   
     Vector(gx, gy)
   }
   
   def drawGraph(graph: SpringGraph, width: Int, height: Int, showLabels: Boolean = false): BufferedImage = {
-    // Set up image canvas
     val image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val g = image.getGraphics.asInstanceOf[Graphics2D]
     g.setRenderingHint(
@@ -53,18 +50,13 @@ object GraphRenderer {
         RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     g.setPaint(Color.WHITE)
     image.getGraphics.fillRect(0, 0, width, height)
-    
-    // Scale conversion factors
+
     val (dx, dy) = (width / 2, height / 2)
-    val (minX, minY, maxX, maxY) = graph.getBounds
-    val c = Math.min(dx * 0.9 / Math.max(maxX, Math.abs(minX)), dy * 0.9 / Math.max(maxY, Math.abs(minY)))
+    val c = computeScale(graph, width, height)
     
-    // Draw edges
     graph.edges.foreach(e => {
       val from = (c * e.from.pos.x + dx, c * e.from.pos.y + dy)
       val to = (c * e.to.pos.x + dx, c * e.to.pos.y + dy)
- 
-      // TODO clean up
       val width = Math.max(2, Math.min(8, e.weight)).toInt / 2
       
       g.setStroke(new BasicStroke(width));
@@ -77,7 +69,7 @@ object GraphRenderer {
       val px = c * v.pos.x + dx - size / 2
       val py = c * v.pos.y + dy - size / 2
       
-      g.setPaint(palette(v.group))
+      g.setPaint(palette(v.group % palette.size))
       g.fill(new Ellipse2D.Double(px, py, size, size))
       g.setColor(Color.WHITE);
       g.draw(new Ellipse2D.Double(px, py, size, size))

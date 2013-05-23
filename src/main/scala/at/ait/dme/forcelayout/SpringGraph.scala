@@ -55,7 +55,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
       if (onIteration.isDefined)
         onIteration.get.apply(it)
       it += 1
-    } while (getTotalEnergy() > nodes.size && it < maxIterations)
+    } while (getTotalEnergy() > nodes.size / 4 && it < maxIterations)
       
     if (onComplete.isDefined)
       onComplete.get.apply(it)

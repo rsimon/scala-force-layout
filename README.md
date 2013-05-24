@@ -1,8 +1,9 @@
 # Scala Force Layout
 
-_Scala Force Layout_ is a force-directed graph layout implementation in Scala, based on a basic spring 
-physics model. To a wide extent, this code is a port of the [Springy](http://getspringy.com/) JavaScript 
-graph layout code by Dennis Hotson. But I'm working on including ideas from other libraries as well.  
+_Scala Force Layout_ is a force-directed graph layout implementation in Scala, based on a spring 
+physics model. To some extent, this code is a port of the [Springy](http://getspringy.com/) JavaScript 
+graph layout code by Dennis Hotson. But it additionally uses the [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation)
+algorithm to improve performance on bigger graphs.
 
 ![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
 
@@ -62,8 +63,7 @@ for complete, working code.
 There are many things on the list - feel free to help out if you care to!
 
 * _"The last thing we need is another graph API."_ // TODO use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model
-* _"Mutable state, everywhere."_ // TODO the code is really ugly and needs to be made more functional & Scala-idiomatic
-* _"Speed is of the essence."_ // TODO improve performance via [Barnes-Hut](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation)
+* _"Mutable state, everywhere."_ // TODO parts of the code are really ugly and need to be made more functional & Scala-idiomatic
 * _"Where can I click?"_ // TODO create a renderer that produces an interactive graph
 * _"Yeah, but I want my labels pink!"_ // TODO add a mechanism to control fill, line and font style
 

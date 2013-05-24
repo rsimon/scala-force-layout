@@ -2,6 +2,7 @@ package at.ait.dme.forcelayout
 
 import scala.util.Random
 import at.ait.dme.forcelayout.quadtree.{ Body, QuadTree }
+import at.ait.dme.forcelayout.quadtree.Quad
 
 /**
  * A graph layout implementation based on a basic spring physics model. To a wide 
@@ -13,16 +14,16 @@ import at.ait.dme.forcelayout.quadtree.{ Body, QuadTree }
 class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
 
   /** Repulsion constant **/
-  private val REPULSION = 50.0
+  private val REPULSION = 100.0
   
   /** Spring stiffness constant **/
-  private val STIFFNESS = 200.0
+  private val STIFFNESS = 300.0
     
   /** Drag coefficient **/
   private val DRAG = 20.0
   
   /** Time-step increment **/
-  private val TIMESTEP = 0.01 / Math.log10(nodes.size)
+  private val TIMESTEP = 0.02 / Math.log(nodes.size)
   
   // TODO how can we change that to an immutable val?
   private var onComplete: Option[Int => Unit] = None
@@ -67,7 +68,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private def iterate = {
     // Compute forces
     applyBarnesHut
-    applyCoulombsLaw
+    // applyCoulombsLaw
     applyHookesLaw
     applyDrag
     attractToCenter
@@ -106,9 +107,33 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   private def applyBarnesHut = {
     val THETA = 0.5
-    val quadtree = new QuadTree(Bounds(minX, minY, maxX, maxY), nodes.map(n => Body(n.pos)))
+    val quadtree = new QuadTree(Bounds(minX, minY, maxX, maxY), nodes.map(n => Body(n.pos, Some(n))))
     
-    // TODO implement
+    def apply(node: Node, quad: Quad): Unit = {
+      val s = (quad.bounds.width + quad.bounds.height) / 2
+      val d = (quad.center - node.pos).magnitude
+      if (s/d > THETA) {
+        // Nearby quad
+        if (quad.children.isDefined) {
+          quad.children.get.foreach(child => apply(node, child))
+        } else if (quad.body.isDefined) {
+          val d = quad.body.get.pos - node.pos
+          val distance = d.magnitude + 0.1 // avoid massive forces at small distances (and divide by zero)
+          val direction = d.normalize
+          
+          if (quad.body.get.data.get.asInstanceOf[Node] != node)
+            node.acceleration -= direction * REPULSION / (distance * distance * 0.5 * node.mass)
+        }
+      } else {
+        // Far-away quad
+        val d = quad.center - node.pos
+        val distance = d.magnitude + 0.1 // avoid massive forces at small distances (and divide by zero)
+        val direction = d.normalize          
+        node.acceleration -= direction * REPULSION * quad.bodies / (distance * distance * 0.5 * node.mass)
+      }
+    }
+    
+    nodes.foreach(node => apply(node, quadtree.root))
   }
   
   private def applyHookesLaw = {

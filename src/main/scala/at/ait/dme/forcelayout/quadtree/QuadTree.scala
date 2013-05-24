@@ -13,7 +13,7 @@ class QuadTree(bounds: Bounds, bodies: Seq[Body]) {
       Quad(bounds, bounds.center, 0)
     } else if (bodies.size == 1) {
       val body = bodies.head
-      Quad(bounds, body.pos, 1, Some(bodies.head))
+      Quad(bounds, body.pos, 1, Some(body))
     } else {
       val children = subdivideBounds(bounds)
         .map(subbounds => build(subbounds, clipBodies(bodies, subbounds)))
@@ -33,6 +33,10 @@ object QuadTree {
   
   def clipBodies(bodies: Seq[Body], bounds: Bounds) = bodies.filter(b => bounds.contains(b.pos))
   
-  def computeCenter(bodies: Seq[Body]) = Vector(0,0)
+  def computeCenter(bodies: Seq[Body]) = {
+    val x = bodies.map(_.pos.x).fold(0.0)(_ + _) / bodies.size
+    val y = bodies.map(_.pos.y).fold(0.0)(_ + _) / bodies.size
+    Vector(x,y)
+  }
   
 }

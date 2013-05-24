@@ -1,6 +1,7 @@
 package at.ait.dme.forcelayout
 
 import scala.util.Random
+import at.ait.dme.forcelayout.quadtree.{ Body, QuadTree }
 
 /**
  * A graph layout implementation based on a basic spring physics model. To a wide 
@@ -21,7 +22,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private val DRAG = 20.0
   
   /** Time-step increment **/
-  private val TIMESTEP = 0.02 / Math.log10(nodes.size)
+  private val TIMESTEP = 0.01 / Math.log10(nodes.size)
   
   // TODO how can we change that to an immutable val?
   private var onComplete: Option[Int => Unit] = None
@@ -30,7 +31,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private var onIteration: Option[Int => Unit] = None
   
   // TODO state! How can we change that to an immutable val?
-  private var (minX, minY, maxX, maxY) = (0.0, 0.0, 0.0, 0.0)
+  private var (minX, minY, maxX, maxY) = (-1.0, -1.0, 1.0, 1.0)
   
   /**
    * Adds an onComplete event handler.
@@ -65,6 +66,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
     
   private def iterate = {
     // Compute forces
+    applyBarnesHut
     applyCoulombsLaw
     applyHookesLaw
     applyDrag
@@ -100,6 +102,13 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
         nodeB.acceleration += direction * REPULSION / (distance * distance * 0.5 * nodeB.mass)
       })
     })
+  }
+  
+  private def applyBarnesHut = {
+    val THETA = 0.5
+    val quadtree = new QuadTree(Bounds(minX, minY, maxX, maxY), nodes.map(n => Body(n.pos)))
+    
+    // TODO implement
   }
   
   private def applyHookesLaw = {

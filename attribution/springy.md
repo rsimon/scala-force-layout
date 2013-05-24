@@ -1,5 +1,5 @@
-To a wide extent, Scala Force Layout is a Scala port of [Springy](http://getspringy.com/) by
-Dennis Hotson (MIT licensed).
+Scala Force Layout includes code that was ported to Scala from the [Springy](http://getspringy.com/) JavaScript
+library by Dennis Hotson (MIT licensed).
 
     Copyright (c) 2010 Dennis Hotson
 

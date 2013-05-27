@@ -9,6 +9,7 @@ import java.awt.geom.Line2D
 import java.awt.geom.Ellipse2D
 import scala.util.Random
 import java.awt.Point
+import java.awt.geom.Point2D
 
 /**
  * A graph drawing utility. 
@@ -37,6 +38,12 @@ object GraphRenderer {
     val gx = (pt.x - width / 2) / c
     val gy = (pt.y - height / 2) / c   
     Vector(gx, gy)
+  }
+  
+  def toScreenCoords(graph: SpringGraph, width: Int, height: Int, pt: Vector) = {
+    val c = computeScale(graph, width, height)
+    val result = (c * pt.x + width / 2, c * pt.y + height / 2)
+    new Point2D.Double(result._1, result._2)
   }
   
   def drawGraph(graph: SpringGraph, width: Int, height: Int, showLabels: Boolean = false): BufferedImage = {

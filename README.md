@@ -7,19 +7,7 @@ algorithm to improve performance on bigger graphs.
 
 ![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
 
-## Current Version
-
-The current version of _Scala Force Layout_ is 0.0.1. Download the jar here: [scala-force-layout_2.10-0.1.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.1.0.jar)
-
-## Building From Source & Running the Examples
-
-_Scala Force Layout_ uses [SBT](http://www.scala-sbt.org/) as a build tool. Please refer to the
-[SBT documentation](http://www.scala-sbt.org/release/docs/index.html) for instructions on how to
-install SBT on your machine. Once you have installed SBT, you can run the examples by typing ``sbt run``. 
-To build a .jar package type ``sbt package``. To generate a project for the 
-[Eclipse IDE](http://www.eclipse.org/), type ``sbt eclipse``.
-
-## API
+## Getting Started
 
 Create a graph from collections of __nodes__ and __edges__.
 
@@ -61,6 +49,18 @@ want is to store an image of the final layout, this is what you're looking for:
 You may also want to take a look at the [Hello World 
 example](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/HelloWorld.scala)
 for complete, working code. 
+
+## Current Version
+
+The current version of _Scala Force Layout_ is 0.0.1. Download the jar here: [scala-force-layout_2.10-0.1.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.1.0.jar)
+
+## Building From Source & Running the Examples
+
+_Scala Force Layout_ uses [SBT](http://www.scala-sbt.org/) as a build tool. Please refer to the
+[SBT documentation](http://www.scala-sbt.org/release/docs/index.html) for instructions on how to
+install SBT on your machine. Once you have installed SBT, you can run the examples by typing ``sbt run``. 
+To build a .jar package type ``sbt package``. To generate a project for the 
+[Eclipse IDE](http://www.eclipse.org/), type ``sbt eclipse``.
 
 ## Future Work
 

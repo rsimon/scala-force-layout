@@ -7,11 +7,9 @@ algorithm to improve performance on bigger graphs.
 
 ![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
 
-## Get Get Current Compiled Version
+## Current Version
 
-The current version of _Scala Force Layout_ is 0.0.1.
-
-Download the jar for Scala 2.10: [scala-force-layout_2.10-0.1.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.1.0.jar)
+The current version of _Scala Force Layout_ is 0.0.1. Download the jar here: [scala-force-layout_2.10-0.1.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.1.0.jar)
 
 ## Building From Source & Running the Examples
 

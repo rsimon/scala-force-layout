@@ -52,7 +52,7 @@ for complete, working code.
 
 ## Current Version
 
-The current version of _Scala Force Layout_ is 0.0.1. Download the jar here: [scala-force-layout_2.10-0.1.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.1.0.jar)
+The current version of _Scala Force Layout_ is 0.1.0. Download the jar here: [scala-force-layout_2.10-0.1.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.1.0.jar)
 
 ## Building From Source & Running the Examples
 

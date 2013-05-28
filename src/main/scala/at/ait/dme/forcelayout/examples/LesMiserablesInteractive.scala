@@ -7,6 +7,7 @@ import at.ait.dme.forcelayout.Edge
 import at.ait.dme.forcelayout.SpringGraph
 import at.ait.dme.forcelayout.renderer.InteractiveGraphRenderer
 import javax.swing.JFrame
+import at.ait.dme.forcelayout.renderer.AcceleratedInteractiveGraphRenderer
 
 object LesMiserablesInteractive extends App {
   
@@ -25,7 +26,7 @@ object LesMiserablesInteractive extends App {
     
   val graph = new SpringGraph(nodes, edges) 
   
-  val vis = new InteractiveGraphRenderer(graph)
+  val vis = new AcceleratedInteractiveGraphRenderer(graph)
   
   val frame = new JFrame("Les Miserables")
   frame.setSize(920, 720)

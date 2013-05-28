@@ -8,6 +8,8 @@ case class Bounds(minX: Double, minY: Double, maxX: Double, maxY: Double) {
   
   lazy val center = Vector((minX + maxX) / 2, (minY + maxY) / 2) 
   
+  def area = width * height
+  
   def contains(pt: Vector) = {
     if (pt.x < minX)
       false

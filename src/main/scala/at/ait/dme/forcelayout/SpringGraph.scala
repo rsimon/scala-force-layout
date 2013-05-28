@@ -14,9 +14,7 @@ import at.ait.dme.forcelayout.quadtree.Quad
 class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
 
   // Hack
-  nodes.foreach(node => {
-    node.mass = 1 + countEdges(node) / 3
-  })
+  nodes.foreach(node => node.mass = 1 + countEdges(node) / 3)
   
   /** Repulsion constant **/
   private val REPULSION = 1.2
@@ -161,21 +159,9 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
 
       val displacement = d.magnitude - spring.length
       val coeff = SPRING_COEFFICIENT * displacement / d.magnitude
-       /*
-       var d = r - length;
-            var coeff = ((!spring.coeff || spring.coeff < 0) ? currentOptions.coeff : spring.coeff) * d / r * spring.weight;
-
-            body1.force.x += coeff * dx;
-            body1.force.y += coeff * dy;
-      */
-      
-      // spring.from.acceleration += d.normalize * STIFFNESS * displacement * 0.5 / spring.from.mass
-      // spring.to.acceleration -= d.normalize * STIFFNESS * displacement * 0.5 / spring.to.mass
 
       spring.from.acceleration += d * coeff * 0.5 / spring.from.mass
       spring.to.acceleration -= d * coeff * 0.5 / spring.to.mass
-
-      
     })
   }
     

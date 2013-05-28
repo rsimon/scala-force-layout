@@ -1,4 +1,4 @@
-package at.ait.dme.forcelayout
+package at.ait.dme.forcelayout.renderer
 
 import java.awt.image.BufferedImage
 import java.awt.Graphics2D
@@ -7,9 +7,10 @@ import java.awt.Color
 import java.awt.BasicStroke
 import java.awt.geom.Line2D
 import java.awt.geom.Ellipse2D
-import scala.util.Random
 import java.awt.Point
 import java.awt.geom.Point2D
+import at.ait.dme.forcelayout.SpringGraph
+import at.ait.dme.forcelayout.Vector
 
 /**
  * A graph drawing utility. 

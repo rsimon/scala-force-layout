@@ -5,7 +5,7 @@ import scala.io.Source
 import at.ait.dme.forcelayout.Node
 import at.ait.dme.forcelayout.Edge
 import at.ait.dme.forcelayout.SpringGraph
-import at.ait.dme.forcelayout.InteractiveGraphRenderer
+import at.ait.dme.forcelayout.renderer.InteractiveGraphRenderer
 import javax.swing.JFrame
 
 object LesMiserablesInteractive extends App {

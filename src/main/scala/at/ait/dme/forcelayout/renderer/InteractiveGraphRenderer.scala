@@ -1,10 +1,9 @@
-package at.ait.dme.forcelayout
+package at.ait.dme.forcelayout.renderer
 
 import javax.swing.JLabel
 import java.awt.Graphics
 import java.awt.Color
 import java.awt.image.BufferedImage
-import javax.swing.ImageIcon
 import java.awt.Graphics2D
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseWheelEvent
@@ -12,13 +11,12 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelListener
 import java.awt.RenderingHints
 import java.awt.Point
-import java.awt.geom.Point2D
 import java.awt.BasicStroke
 import java.awt.geom.Line2D
 import java.awt.geom.Ellipse2D
-import java.awt.GraphicsEnvironment
-import java.awt.image.VolatileImage
-import javax.swing.JFrame
+import at.ait.dme.forcelayout.Node
+import at.ait.dme.forcelayout.SpringGraph
+import at.ait.dme.forcelayout.Vector
 
 class InteractiveGraphRenderer(graph: SpringGraph) extends JLabel {
   
@@ -118,24 +116,18 @@ class InteractiveGraphRenderer(graph: SpringGraph) extends JLabel {
       g2d.draw(new Line2D.Double(from._1, from._2, to._1, to._2))
     })
   
-    /*
     graph.nodes.foreach(v => {
-      val size = Math.log(v.mass) * 1.5 + 4
-      // val size = (graph.countEdges(v) / 3) + 6
+      val size = Math.log(v.mass) + 5
       val px = c * v.pos.x + dx - size / 2
       val py = c * v.pos.y + dy - size / 2
       
       g2d.setPaint(palette(v.group % palette.size))
       g2d.fill(new Ellipse2D.Double(px, py, size, size))
-      // g2d.setColor(Color.WHITE);
-      // g2d.draw(new Ellipse2D.Double(px, py, size, size))
     })
-    */
     
     if (selectedNode.isDefined) {
       val n = selectedNode.get
-      val size = (n.weight + 3) * 2
-      // val size = (graph.countEdges(n) / 3) + 6
+      val size = Math.log(n.mass) + 7
       val px = c * n.pos.x + dx - size / 2
       val py = c * n.pos.y + dy - size / 2
       
@@ -161,13 +153,5 @@ class InteractiveGraphRenderer(graph: SpringGraph) extends JLabel {
   }
   
   def start = graph.doLayout()
-  
-  /*
-  override def createVolatileImage(width: Int, height: Int) = {	
-	val gEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment
-	val gConfiguration = gEnvironment.getDefaultScreenDevice.getDefaultConfiguration
-	gConfiguration.createCompatibleVolatileImage(width, height)
-  }
-  */
   
 }

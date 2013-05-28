@@ -7,12 +7,13 @@ import javax.swing.JFrame
 import javax.swing.ImageIcon
 import java.awt.Dimension
 import javax.swing.JLabel
-import at.ait.dme.forcelayout.GraphRenderer
+import at.ait.dme.forcelayout.renderer.GraphRenderer
 import at.ait.dme.forcelayout.Node
 import at.ait.dme.forcelayout.SpringGraph
 import rapture.io.JsonExtractor.intJsonExtractor
 import rapture.io.JsonExtractor.listJsonExtractor
 import rapture.io.JsonExtractor.stringJsonExtractor
+import at.ait.dme.forcelayout.renderer.GraphRenderer
 
 object LesMiserables extends App {
 

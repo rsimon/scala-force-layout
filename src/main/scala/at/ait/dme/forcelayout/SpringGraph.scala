@@ -202,6 +202,6 @@ case class Node(id: String, label: String, weight: Double = 1.0, group: Int = 0)
 /** An edge in the graph **/
 case class Edge(val from: Node, val to: Node, weight: Double = 1.0) {
   
-  val length = 80 // 1 / weight
+  val length = 50 // 1 / weight
   
 }

@@ -14,6 +14,7 @@ import rapture.io.JsonExtractor.intJsonExtractor
 import rapture.io.JsonExtractor.listJsonExtractor
 import rapture.io.JsonExtractor.stringJsonExtractor
 import at.ait.dme.forcelayout.renderer.GraphRenderer
+import at.ait.dme.forcelayout.renderer.ImageRenderer
 
 object LesMiserables extends App {
 
@@ -43,7 +44,7 @@ object LesMiserables extends App {
   frame.setVisible(true);
   
   graph
-    .onIteration(it => imgLabel.setIcon(new ImageIcon(GraphRenderer.drawGraph(graph, 800, 800))))
+    .onIteration(it => imgLabel.setIcon(new ImageIcon(ImageRenderer.drawGraph(graph, 800, 800))))
     .onComplete(it => { 
       println("completed in " + it + " iterations")
     })

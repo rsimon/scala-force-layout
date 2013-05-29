@@ -9,6 +9,7 @@ import at.ait.dme.forcelayout.renderer.GraphRenderer
 import javax.imageio.ImageIO
 import java.io.File
 import at.ait.dme.forcelayout.renderer.GraphRenderer
+import at.ait.dme.forcelayout.renderer.ImageRenderer
 
 object HelloWorld extends App {
   
@@ -35,7 +36,7 @@ object HelloWorld extends App {
   frame.setVisible(true);
   
   graph
-    .onIteration(it => imgLabel.setIcon(new ImageIcon(GraphRenderer.drawGraph(graph, 500, 500))))
+    .onIteration(it => imgLabel.setIcon(new ImageIcon(ImageRenderer.drawGraph(graph, 500, 500))))
     .onComplete(it => { 
       println("completed in " + it + " iterations")
     })

@@ -2,14 +2,11 @@ package at.ait.dme.forcelayout.examples
 
 import rapture.io._
 import scala.io.Source
-import at.ait.dme.forcelayout.Node
-import at.ait.dme.forcelayout.Edge
-import at.ait.dme.forcelayout.SpringGraph
-import at.ait.dme.forcelayout.renderer.InteractiveGraphRenderer
 import javax.swing.JFrame
-import at.ait.dme.forcelayout.renderer.AcceleratedInteractiveGraphRenderer
+import at.ait.dme.forcelayout.{ Edge, Node, SpringGraph }
+import at.ait.dme.forcelayout.renderer.{ BufferedInteractiveGraphRenderer, OpenGLInteractiveGraphRenderer }
 
-object LesMiserablesInteractive extends App {
+object LesMiserablesZoomable extends App {
   
   val json = Json.parse(Source.fromFile("src/test/resources/examples/miserables.json").mkString)
   
@@ -26,7 +23,7 @@ object LesMiserablesInteractive extends App {
     
   val graph = new SpringGraph(nodes, edges) 
   
-  val vis = new AcceleratedInteractiveGraphRenderer(graph)
+  val vis = new BufferedInteractiveGraphRenderer(graph)
   
   val frame = new JFrame("Les Miserables")
   frame.setSize(920, 720)

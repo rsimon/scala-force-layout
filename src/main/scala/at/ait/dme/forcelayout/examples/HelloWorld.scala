@@ -1,15 +1,9 @@
 package at.ait.dme.forcelayout.examples
 
 import at.ait.dme.forcelayout.{Node, Edge, SpringGraph}
-import javax.swing.JFrame
-import javax.swing.ImageIcon
-import java.awt.Dimension
-import javax.swing.JLabel
-import at.ait.dme.forcelayout.renderer.GraphRenderer
-import javax.imageio.ImageIO
-import java.io.File
-import at.ait.dme.forcelayout.renderer.GraphRenderer
 import at.ait.dme.forcelayout.renderer.ImageRenderer
+import java.awt.Dimension
+import javax.swing.{ JFrame, JLabel, ImageIcon }
 
 object HelloWorld extends App {
   

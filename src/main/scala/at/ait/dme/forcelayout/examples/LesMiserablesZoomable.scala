@@ -2,6 +2,7 @@ package at.ait.dme.forcelayout.examples
 
 import rapture.io._
 import scala.io.Source
+import java.awt.Dimension
 import javax.swing.JFrame
 import at.ait.dme.forcelayout.{ Edge, Node, SpringGraph }
 import at.ait.dme.forcelayout.renderer.{ BufferedInteractiveGraphRenderer, OpenGLInteractiveGraphRenderer }
@@ -26,7 +27,7 @@ object LesMiserablesZoomable extends App {
   val vis = new BufferedInteractiveGraphRenderer(graph)
   
   val frame = new JFrame("Les Miserables")
-  frame.setSize(920, 720)
+  frame.setPreferredSize(new Dimension(920,720))
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
   frame.getContentPane().add(vis) 
   frame.pack()

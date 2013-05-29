@@ -2,7 +2,7 @@
 
 _Scala Force Layout_ is a force-directed graph layout implementation in Scala. The project originally started
 out as a a port of the [Springy](http://getspringy.com/) JavaScript graph layout code by Dennis Hotson. In
-addition, I added a [Barnes-Hut simulation](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation) to 
+addition, I added [Barnes-Hut simulation](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation) to 
 improve performance on bigger graphs, and based my physics model parameters on those used in
 [VivaGraphJS](http://github.com/anvaka/VivaGraphJS) by Andrei Kashcha.  
 

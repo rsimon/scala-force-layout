@@ -39,7 +39,7 @@ want is to store an image of the final layout, this is what you're looking for:
     graph
       .onComplete(it => {
         // Renders a 500x500 pixel image of the final graph layout  
-        val image = GraphRenderer.drawGraph(graph, 500, 500)
+        val image = ImageRenderer.drawGraph(graph, 500, 500)
         
         // Writes the image to a PNG file
         ImageIO.write(image, "png", new File("my-graph.png"))
@@ -52,7 +52,7 @@ for complete, working code.
 
 ## Current Version
 
-The current version of _Scala Force Layout_ is 0.1.0. Download the jar here: [scala-force-layout_2.10-0.1.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.1.0.jar)
+The current version of _Scala Force Layout_ is 0.2.0. Download the jar here: [scala-force-layout_2.10-0.2.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.2.0.jar)
 
 ## Building From Source & Running the Examples
 

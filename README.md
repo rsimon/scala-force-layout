@@ -73,10 +73,6 @@ You may also want to take a look at the [Hello World](https://github.com/rsimon/
 and [LesMiserablesZoomable](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/LesMiserablesZoomable.scala)
 examples for complete, working code. 
 
-## Current Version
-
-The current version of _Scala Force Layout_ is 0.2.0. Download the jar for Scala 2.10 here: [scala-force-layout_2.10-0.2.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.2.0.jar)
-
 ## Building From Source & Running the Examples
 
 _Scala Force Layout_ uses [SBT](http://www.scala-sbt.org/) as a build tool. Please refer to the
@@ -84,6 +80,10 @@ _Scala Force Layout_ uses [SBT](http://www.scala-sbt.org/) as a build tool. Plea
 install SBT on your machine. Once you have installed SBT, you can run the examples by typing ``sbt run``. 
 To build a .jar package type ``sbt package``. To generate a project for the 
 [Eclipse IDE](http://www.eclipse.org/), type ``sbt eclipse``.
+
+## Current Version
+
+The current version of _Scala Force Layout_ is 0.2.0. Download the jar for Scala 2.10 here: [scala-force-layout_2.10-0.2.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.2.0.jar)
 
 ## Future Work
 

@@ -14,7 +14,7 @@ import at.ait.dme.forcelayout.quadtree.Quad
 class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
 
   // Hack
-  nodes.foreach(node => node.mass = 1 + countEdges(node) / 3)
+  nodes.par.foreach(node => node.mass = 1 + countEdges(node) / 3)
   
   /** Repulsion constant **/
   private val REPULSION = 1.2

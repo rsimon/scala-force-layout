@@ -3,8 +3,9 @@
 _Scala Force Layout_ is a force-directed graph layout implementation in Scala. The project originally started
 out as a a port of the [Springy](http://getspringy.com/) JavaScript graph layout code by Dennis Hotson. In
 addition, I added [Barnes-Hut simulation](http://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation) to 
-improve performance on bigger graphs, and based my physics model parameters on those used in
-[VivaGraphJS](http://github.com/anvaka/VivaGraphJS) by Andrei Kashcha.  
+improve performance on bigger graphs (here's [a video](http://www.screenr.com/7F7H)),
+and based my physics model parameters on those used in [VivaGraphJS](http://github.com/anvaka/VivaGraphJS) by
+Andrei Kashcha.  
 
 ![Scala Force Layout Example](http://github.com/rsimon/scala-force-layout/raw/master/scala-force-layout.png)
 
@@ -90,6 +91,9 @@ There are many things on the list - feel free to help out if you care to!
 
 * _"The last thing we need is another graph API."_ // TODO use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model
 * _"Mutable state, everywhere."_ // TODO parts of the code are really ugly and need to be made more functional & Scala-idiomatic
+* _"Speed is of the essence."_ // TODO I tried [Scala's parallel collections](http://docs.scala-lang.org/overviews/parallel-collections/overview.html)
+  on parts of the algorithm and that reduced processing time to ~60%. Some locking effects with the UI code seemed
+  to eliminate the benefits, though. So - again - an immutable version of the graph would be helpful.
 * _"Where can I click?"_ // TODO create a renderer that produces an interactive graph, complete with draggable nodes and such
 * _"Yeah, but I want my labels pink!"_ // TODO add a mechanism to control node, edge and label style
 * _"Sorry, I don't code."_ // TODO A simple command-line wrapper that opens some [GraphSON](https://github.com/tinkerpop/blueprints/wiki/GraphSON-Reader-and-Writer-Library), 

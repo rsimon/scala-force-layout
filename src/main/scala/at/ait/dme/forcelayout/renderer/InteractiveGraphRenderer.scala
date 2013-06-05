@@ -2,7 +2,7 @@ package at.ait.dme.forcelayout.renderer
 
 import java.awt._
 import java.awt.event._
-import at.ait.dme.forcelayout.{ Node, SpringGraph, Vector }
+import at.ait.dme.forcelayout.{ Node, SpringGraph, Vector2D }
 import javax.swing.JLabel
 
 class InteractiveGraphRenderer(graph: SpringGraph) extends JLabel with GraphRenderer {
@@ -13,9 +13,6 @@ class InteractiveGraphRenderer(graph: SpringGraph) extends JLabel with GraphRend
   private var lastMousePos = new Point(0, 0)
   
   private var selectedNode: Option[Node] = None
- 
-  graph.onIteration(it => if (it > 50) repaint())
-  graph.onComplete(it => { println("completed in " + it + " iterations"); repaint() })
   
   addMouseMotionListener(new MouseAdapter() {
     override def mouseDragged(e: MouseEvent) {
@@ -62,7 +59,8 @@ class InteractiveGraphRenderer(graph: SpringGraph) extends JLabel with GraphRend
     render(g2d, graph, bounds.getWidth.toInt, bounds.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
   }
   
-  def start = graph.doLayout()
+  def start = graph.doLayout(onComplete = (it => { println("completed in " + it + " iterations"); repaint() }),
+                             onIteration = (it => repaint()))  
 
 }
 

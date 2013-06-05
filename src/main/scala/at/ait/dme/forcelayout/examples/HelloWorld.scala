@@ -1,9 +1,11 @@
 package at.ait.dme.forcelayout.examples
 
-import at.ait.dme.forcelayout.{Node, Edge, SpringGraph}
 import at.ait.dme.forcelayout.renderer.ImageRenderer
 import java.awt.Dimension
 import javax.swing.{ JFrame, JLabel, ImageIcon }
+import at.ait.dme.forcelayout.Node
+import at.ait.dme.forcelayout.Edge
+import at.ait.dme.forcelayout.SpringGraph
 
 object HelloWorld extends App {
   
@@ -29,11 +31,8 @@ object HelloWorld extends App {
   frame.pack();
   frame.setVisible(true);
   
-  graph
-    .onIteration(it => imgLabel.setIcon(new ImageIcon(ImageRenderer.drawGraph(graph, 500, 500))))
-    .onComplete(it => { 
-      println("completed in " + it + " iterations")
-    })
-    .doLayout()
+  graph.doLayout(
+      onComplete = (it => println("completed in " + it + " iterations")),
+      onIteration = (it => imgLabel.setIcon(new ImageIcon(ImageRenderer.drawGraph(graph, 500, 500)))))
 
 }

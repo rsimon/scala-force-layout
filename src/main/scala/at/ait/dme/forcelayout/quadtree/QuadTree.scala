@@ -1,6 +1,6 @@
 package at.ait.dme.forcelayout.quadtree
 
-import at.ait.dme.forcelayout.{ Bounds, Vector }
+import at.ait.dme.forcelayout.{ Bounds, Vector2D }
 
 class QuadTree(bounds: Bounds, bodies: Seq[Body]) {
 
@@ -36,7 +36,7 @@ object QuadTree {
   def computeCenter(bodies: Seq[Body]) = {
     val x = bodies.map(_.pos.x).fold(0.0)(_ + _) / bodies.size
     val y = bodies.map(_.pos.y).fold(0.0)(_ + _) / bodies.size
-    Vector(x,y)
+    Vector2D(x,y)
   }
   
 }

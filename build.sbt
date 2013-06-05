@@ -30,7 +30,7 @@ pomExtra := (
     </license>
   </licenses>
   <scm>
-    <url>git@github.com:rsimon/scala-force-layout.git</url>
+    <url>https://github.com/rsimon/scala-force-layout.git</url>
     <connection>scm:git:git@github.com:rsimon/scala-force-layout.git</connection>
   </scm>
   <developers>

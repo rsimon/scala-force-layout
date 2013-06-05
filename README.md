@@ -13,61 +13,67 @@ Andrei Kashcha.
 
 Create a graph from collections of __nodes__ and __edges__.
 
-    val nodes = Seq(
-        Node("id_a", "Node A"),
-        Node("id_b", "Node B"),
-        Node("id_c", "Node C"),
-        Node("id_d", "Node D"))
+```scala
+val nodes = Seq(
+    Node("id_a", "Node A"),
+    Node("id_b", "Node B"),
+    Node("id_c", "Node C"),
+    Node("id_d", "Node D"))
       
-    val edges = Seq(
-        Edge(nodes(0), nodes(1)),
-        Edge(nodes(1), nodes(2)),
-        Edge(nodes(2), nodes(3)),
-        Edge(nodes(0), nodes(3)))
+val edges = Seq(
+    Edge(nodes(0), nodes(1)),
+    Edge(nodes(1), nodes(2)),
+    Edge(nodes(2), nodes(3)),
+    Edge(nodes(0), nodes(3)))
       
-    val graph = new SpringGraph(nodes, edges)
+val graph = new SpringGraph(nodes, edges)
+```
     
 Run the layout algorithm using the ``graph.doLayout()`` method. Attach ``onIteration`` and
 ``onComplete`` handlers to capture intermediate and final results of the layout process.
 
-    graph
-      .onIteration(it => { ... do something on every layout iteration ... })
-      .onComplete(it => { println("completed in " + it + " iterations") })
-      .doLayout()
+```scala
+graph.doLayout(
+        onIteration = (it => { ... do something on every layout iteration ... })
+        onComplete = (it => { println("completed in " + it + " iterations") }))
+```
 
 ### Rendering an Image
             
 The ``ImageRenderer`` is a simple utility for rendering an image of your graph. If all you
 want is to store an image of the final layout, this is what you're looking for:
 
-    graph
-      .onComplete(it => {
-        // Renders a 500x500 pixel image of the final graph layout  
-        val image = ImageRenderer.drawGraph(graph, 500, 500)
+```scala
+graph.doLayout(
+  onComplete = (it => {
+    // Renders a 500x500 pixel image of the final graph layout  
+    val image = ImageRenderer.drawGraph(graph, 500, 500)
         
-        // Writes the image to a PNG file
-        ImageIO.write(image, "png", new File("my-graph.png"))
-      })
-      .doLayout()
+    // Writes the image to a PNG file
+    ImageIO.write(image, "png", new File("my-graph.png"))
+  }))
+```
       
 ### Opening a Viewer
       
 If you want to open your graph in a window on the screen (with mouse pan and zoom included),
 use this code:
 
-    // Creates a zoom- and pan-able view of the graph
-    val vis = new BufferedInteractiveGraphRenderer(graph)
+```scala
+// Creates a zoom- and pan-able view of the graph
+val vis = new BufferedInteractiveGraphRenderer(graph)
   
-    // Creates a JFrame, with the graph renderer in the content pane
-    val frame = new JFrame("Les Miserables")
-    frame.setSize(920, 720)
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-    frame.getContentPane().add(vis) 
-    frame.pack()
+// Creates a JFrame, with the graph renderer in the content pane
+val frame = new JFrame("Les Miserables")
+frame.setSize(920, 720)
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+frame.getContentPane().add(vis) 
+frame.pack()
     
-    // Pops up the JFrame on the screen, and starts the layout process
-    frame.setVisible(true)
-    vis.start 
+// Pops up the JFrame on the screen, and starts the layout process
+frame.setVisible(true)
+vis.start
+``` 
       
 You may also want to take a look at the [Hello World](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/HelloWorld.scala)
 and [LesMiserablesZoomable](https://github.com/rsimon/scala-force-layout/blob/master/src/main/scala/at/ait/dme/forcelayout/examples/LesMiserablesZoomable.scala)

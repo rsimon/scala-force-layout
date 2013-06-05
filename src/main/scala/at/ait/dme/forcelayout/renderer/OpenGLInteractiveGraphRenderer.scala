@@ -16,7 +16,7 @@ import java.awt.geom.Line2D
 import java.awt.geom.Ellipse2D
 import at.ait.dme.forcelayout.Node
 import at.ait.dme.forcelayout.SpringGraph
-import at.ait.dme.forcelayout.Vector
+import at.ait.dme.forcelayout.Vector2D
 import java.awt.Canvas
 import java.awt.image.BufferStrategy
 
@@ -34,9 +34,6 @@ class OpenGLInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with Gra
   private var selectedNode: Option[Node] = None
   
   private var strategy: BufferStrategy = null
-  
-  graph.onIteration(it => doPaint(strategy))
-  graph.onComplete(it => { println("completed in " + it + " iterations"); doPaint(strategy) })
   
   addMouseMotionListener(new MouseAdapter() {
     override def mouseDragged(e: MouseEvent) {
@@ -73,7 +70,8 @@ class OpenGLInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with Gra
   def start = {
     createBufferStrategy(2)
     strategy = getBufferStrategy
-    graph.doLayout()
+    graph.doLayout(onComplete = (it => { println("completed in " + it + " iterations"); doPaint(strategy) }),
+                   onIteration = (it => doPaint(strategy))) 
   }
 
   def doPaint(strategy: BufferStrategy): Unit = {

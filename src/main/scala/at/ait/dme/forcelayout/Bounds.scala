@@ -6,11 +6,11 @@ case class Bounds(minX: Double, minY: Double, maxX: Double, maxY: Double) {
   
   lazy val height = maxY - minY
   
-  lazy val center = Vector((minX + maxX) / 2, (minY + maxY) / 2) 
+  lazy val center = Vector2D((minX + maxX) / 2, (minY + maxY) / 2) 
   
   lazy val area = width * height
   
-  def contains(pt: Vector) = {
+  def contains(pt: Vector2D) = {
     if (pt.x < minX)
       false
     else if (pt.x > maxX)

@@ -1,13 +1,24 @@
 package at.ait.dme.forcelayout.renderer
 
 import java.awt._
-import at.ait.dme.forcelayout.{ Node, Edge, SpringGraph, Vector }
 import java.awt.geom.Ellipse2D
+import at.ait.dme.forcelayout.SpringGraph
+import at.ait.dme.forcelayout.Vector2D
+import at.ait.dme.forcelayout.Node
 
 private[renderer] trait GraphRenderer {
 
   private val palette = Seq(
-      new Color(31, 119, 180),      new Color(255, 127, 14),      new Color(44, 160, 44),      new Color(214, 39, 40),      new Color(148, 103, 189),      new Color(140, 86, 75),      new Color(227, 119, 194),      new Color(127, 127, 127),      new Color(188, 189, 34),      new Color(23, 190, 207))
+      new Color(31, 119, 180),
+      new Color(255, 127, 14),
+      new Color(44, 160, 44),
+      new Color(214, 39, 40),
+      new Color(148, 103, 189),
+      new Color(140, 86, 75),
+      new Color(227, 119, 194),
+      new Color(127, 127, 127),
+      new Color(188, 189, 34),
+      new Color(23, 190, 207))
 
   private var lastCompletion: Long = System.currentTimeMillis
   
@@ -19,29 +30,29 @@ private[renderer] trait GraphRenderer {
     val (dx, dy) = (width / 2 + offsetX, height / 2 + offsetY)
     
     graph.edges.foreach(e => {
-      val from = (c * e.from.pos.x + dx, c * e.from.pos.y + dy)
-      val to = (c * e.to.pos.x + dx, c * e.to.pos.y + dy)
+      val from = (c * e.from.state.pos.x + dx, c * e.from.state.pos.y + dy)
+      val to = (c * e.to.state.pos.x + dx, c * e.to.state.pos.y + dy)
       val width = Math.max(2, Math.min(8, e.weight)).toInt / 2
     
       g2d.setStroke(new BasicStroke(width));
       g2d.setColor(new Color(198, 198, 198, 198))  
       g2d.drawLine(from._1.toInt, from._2.toInt, to._1.toInt, to._2.toInt)
     })
-
-    graph.nodes.foreach(v => {
-      val size = 7
-      val px = c * v.pos.x + dx - size / 2
-      val py = c * v.pos.y + dy - size / 2
-      
-      g2d.setColor(palette(v.group % palette.size))
-      g2d.fill(new Ellipse2D.Double(px, py, size, size))
-    })
     
+    val size = 7
+    graph.nodes.map(n => (c * n.state.pos.x + dx - size / 2, c * n.state.pos.y + dy - size / 2, n.group))
+      .filter(pt => pt._1 > 0 && pt._2 > 0)
+      .filter(pt => pt._1 <= width && pt._2 <= height)
+      .foreach(pt => {      
+        g2d.setColor(palette(pt._3 % palette.size))
+        g2d.fill(new Ellipse2D.Double(pt._1, pt._2, size, size))
+      })
+      
     if (selectedNode.isDefined) {
       val n = selectedNode.get
       val size = Math.log(n.mass) + 7
-      val px = c * n.pos.x + dx - size / 2
-      val py = c * n.pos.y + dy - size / 2
+      val px = c * n.state.pos.x + dx - size / 2
+      val py = c * n.state.pos.y + dy - size / 2
       
       g2d.setColor(Color.BLACK);
       g2d.draw(new Ellipse2D.Double(px, py, size, size))  
@@ -55,15 +66,15 @@ private[renderer] trait GraphRenderer {
   }
   
   private def computeScale(graph: SpringGraph, width: Int, height: Int) = {
-    val (minX, minY, maxX, maxY) = graph.getBounds
-    Math.min(width / 2 * 0.9 / Math.max(maxX, Math.abs(minX)), height / 2 * 0.9 / Math.max(maxY, Math.abs(minY)))    
+    val bounds = graph.bounds
+    Math.min(width / 2 * 0.9 / Math.max(bounds.maxX, Math.abs(bounds.minX)), height / 2 * 0.9 / Math.max(bounds.maxY, Math.abs(bounds.minY)))    
   }
         
-  def toGraphCoords(graph: SpringGraph, pt: Point, width: Int, height: Int, offsetX: Double = 0.0, offsetY: Double = 0.0, zoom: Double = 1.0): Vector = {
+  def toGraphCoords(graph: SpringGraph, pt: Point, width: Int, height: Int, offsetX: Double = 0.0, offsetY: Double = 0.0, zoom: Double = 1.0): Vector2D = {
     val c = computeScale(graph, width, height)
     val gx = (pt.x - width / 2 - offsetX) / (c * zoom)
     val gy = (pt.y - height / 2 - offsetY) / (c * zoom) 
-    Vector(gx, gy)
+    Vector2D(gx, gy)
   }
   
 }

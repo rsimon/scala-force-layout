@@ -10,7 +10,7 @@ import java.awt.geom.Ellipse2D
 import java.awt.Point
 import java.awt.geom.Point2D
 import at.ait.dme.forcelayout.SpringGraph
-import at.ait.dme.forcelayout.Vector
+import at.ait.dme.forcelayout.Vector2D
 
 /**
  * A graph drawing utility. 

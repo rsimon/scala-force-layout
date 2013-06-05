@@ -12,7 +12,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelListener
 import java.awt.event.MouseWheelEvent
-import at.ait.dme.forcelayout.Vector
+import at.ait.dme.forcelayout.Vector2D
 import java.awt.Graphics2D
 import java.awt.BasicStroke
 import java.awt.geom.Line2D
@@ -32,9 +32,6 @@ class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with G
   private var lastMousePos = new Point(0, 0)
   
   private var selectedNode: Option[Node] = None
-  
-  graph.onIteration(it => repaint())
-  graph.onComplete(it => { println("completed in " + it + " iterations"); repaint() })
   
   addMouseMotionListener(new MouseAdapter() {
     override def mouseDragged(e: MouseEvent) {
@@ -93,7 +90,7 @@ class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with G
   }
  
   override def update(g: Graphics) = paint(g)
-  
-  def start = graph.doLayout()
-  
+
+  def start = graph.doLayout(onComplete = (it => { println("completed in " + it + " iterations"); repaint() }),
+                             onIteration = (it => repaint()))  
 }

@@ -5,9 +5,9 @@ import scala.io.Source
 import java.awt.Dimension
 import javax.swing.JFrame
 import at.ait.dme.forcelayout.{ Edge, Node, SpringGraph }
-import at.ait.dme.forcelayout.renderer.{ BufferedInteractiveGraphRenderer, OpenGLInteractiveGraphRenderer }
+import at.ait.dme.forcelayout.renderer.OpenGLInteractiveGraphRenderer
 
-object LesMiserablesZoomable extends App {
+object LesMiserablesOpenGL extends App {
   
   val json = Json.parse(Source.fromFile("src/test/resources/examples/miserables.json").mkString)
   
@@ -24,7 +24,7 @@ object LesMiserablesZoomable extends App {
     
   val graph = new SpringGraph(nodes, edges) 
   
-  val vis = new BufferedInteractiveGraphRenderer(graph)
+  val vis = new OpenGLInteractiveGraphRenderer(graph)
   
   val frame = new JFrame("Les Miserables")
   frame.setPreferredSize(new Dimension(920,720))

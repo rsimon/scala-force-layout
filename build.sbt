@@ -1,3 +1,5 @@
+organization := "at.ait.dme.forcelayout"
+
 name := "scala-force-layout"
 
 version := "0.3.0"

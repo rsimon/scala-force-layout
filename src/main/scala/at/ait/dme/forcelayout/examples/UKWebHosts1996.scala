@@ -36,7 +36,7 @@ object UKWebHosts1996 extends App {
   
   val vis = new BufferedInteractiveGraphRenderer(graph)
   
-  val frame = new JFrame("Les Miserables")
+  val frame = new JFrame("1996 UK Web Hosts")
   frame.setPreferredSize(new Dimension(920,720))
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
   frame.getContentPane().add(vis) 

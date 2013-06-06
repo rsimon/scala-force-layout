@@ -10,6 +10,12 @@ libraryDependencies ++= Seq(
   "com.propensive" % "rapture-io" % "0.7.2"
 )
 
+// Extras for publishing to Sonatype Maven repository
+// Use 'sbt publish-signed' to publish
+// Read more: http://www.scala-sbt.org/0.12.3/docs/Community/Using-Sonatype.html
+// and: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-8.ReleaseIt
+// Nexus UI is at: https://oss.sonatype.org/
+
 publishTo <<= version { (v: String) =>
   val nexus = "https://oss.sonatype.org/"
   if (v.trim.endsWith("SNAPSHOT"))

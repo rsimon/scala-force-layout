@@ -22,7 +22,7 @@ private[renderer] trait GraphRenderer {
 
   private var lastCompletion: Long = System.currentTimeMillis
   
-  def render(g2d: Graphics2D, graph: SpringGraph, width: Int, height: Int, selectedNode: Option[Node] = None, offsetX: Double = 0.0, offsetY: Double = 0.0, zoom: Double = 1.0): Unit = {
+  def render(g2d: Graphics2D, graph: SpringGraph, width: Int, height: Int, selectedNode: Option[Node] = None, offsetX: Double = 0.0, offsetY: Double = 0.0, zoom: Double = 1.0, showLabels: Boolean = false): Unit = {
     g2d.setColor(Color.WHITE)
     g2d.fillRect(0, 0, width, height)
 
@@ -39,13 +39,17 @@ private[renderer] trait GraphRenderer {
       g2d.drawLine(from._1.toInt, from._2.toInt, to._1.toInt, to._2.toInt)
     })
     
-    graph.nodes.map(n => (c * n.state.pos.x + dx, c * n.state.pos.y + dy, n.mass, n.group))
+    graph.nodes.map(n => (c * n.state.pos.x + dx, c * n.state.pos.y + dy, n))
       .filter(pt => pt._1 > 0 && pt._2 > 0)
       .filter(pt => pt._1 <= width && pt._2 <= height)
       .foreach(pt => {      
-        val size = Math.max(3, Math.min(10, Math.log(pt._3) + 1))
-        g2d.setColor(palette(pt._4 % palette.size))
+        val size = Math.max(3, Math.min(10, Math.log(pt._3.mass) + 1))
+        g2d.setColor(palette(pt._3.group % palette.size))
         g2d.fill(new Ellipse2D.Double(pt._1 - size / 2, pt._2 - size / 2, size, size))
+        if (showLabels) {
+          g2d.setColor(Color.BLACK)
+          g2d.drawString(pt._3.label, pt._1.toInt + 5, pt._2.toInt - 2)
+        }
       })
       
     if (selectedNode.isDefined) {

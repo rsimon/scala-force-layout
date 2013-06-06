@@ -19,6 +19,8 @@ import java.awt.geom.Line2D
 import java.awt.geom.Ellipse2D
 import java.awt.RenderingHints
 import java.awt.GraphicsEnvironment
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 
 class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with GraphRenderer {
 
@@ -32,6 +34,17 @@ class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with G
   private var lastMousePos = new Point(0, 0)
   
   private var selectedNode: Option[Node] = None
+  
+  private var showLabels = false
+  
+  addKeyListener(new KeyAdapter() {
+    override def keyPressed(e: KeyEvent) {
+      if (e.getKeyCode == 76) {
+        showLabels = !showLabels
+        repaint()
+      }
+    }  
+  })
   
   addMouseMotionListener(new MouseAdapter() {
     override def mouseDragged(e: MouseEvent) {
@@ -84,8 +97,8 @@ class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with G
                       RenderingHints.KEY_FRACTIONALMETRICS,
                       RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     }
-  
-    render(offscreenGraphics, graph, currentSize.getWidth.toInt, currentSize.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
+
+    render(offscreenGraphics, graph, currentSize.getWidth.toInt, currentSize.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom, showLabels)
     g.drawImage(offscreenImage, 0, 0, this)
   }
  

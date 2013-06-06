@@ -5,6 +5,9 @@ import java.awt.geom.Ellipse2D
 import at.ait.dme.forcelayout.SpringGraph
 import at.ait.dme.forcelayout.Vector2D
 import at.ait.dme.forcelayout.Node
+import at.ait.dme.forcelayout.ImmutableNode
+import at.ait.dme.forcelayout.Edge
+import at.ait.dme.forcelayout.ImmutableEdge
 
 private[renderer] trait GraphRenderer {
 
@@ -22,14 +25,14 @@ private[renderer] trait GraphRenderer {
 
   private var lastCompletion: Long = System.currentTimeMillis
   
-  def render(g2d: Graphics2D, graph: SpringGraph, width: Int, height: Int, selectedNode: Option[Node] = None, offsetX: Double = 0.0, offsetY: Double = 0.0, zoom: Double = 1.0): Unit = {
+  def render(g2d: Graphics2D, graph: SpringGraph, nodes: Seq[ImmutableNode], edges: Seq[ImmutableEdge], width: Int, height: Int, selectedNode: Option[Node] = None, offsetX: Double = 0.0, offsetY: Double = 0.0, zoom: Double = 1.0): Unit = {
     g2d.setColor(Color.WHITE)
     g2d.fillRect(0, 0, width, height)
 
     val c = computeScale(graph, width, height) * zoom
     val (dx, dy) = (width / 2 + offsetX, height / 2 + offsetY)
     
-    graph.edges.foreach(e => {
+    edges.foreach(e => {
       val from = (c * e.from.state.pos.x + dx, c * e.from.state.pos.y + dy)
       val to = (c * e.to.state.pos.x + dx, c * e.to.state.pos.y + dy)
       val width = Math.max(2, Math.min(8, e.weight)).toInt / 2
@@ -40,7 +43,7 @@ private[renderer] trait GraphRenderer {
     })
     
     val size = 7
-    graph.nodes.map(n => (c * n.state.pos.x + dx - size / 2, c * n.state.pos.y + dy - size / 2, n.group))
+    nodes.map(n => (c * n.state.pos.x + dx - size / 2, c * n.state.pos.y + dy - size / 2, n.group))
       .filter(pt => pt._1 > 0 && pt._2 > 0)
       .filter(pt => pt._1 <= width && pt._2 <= height)
       .foreach(pt => {      

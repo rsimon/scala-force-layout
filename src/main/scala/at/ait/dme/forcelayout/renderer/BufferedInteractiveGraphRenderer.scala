@@ -19,6 +19,9 @@ import java.awt.geom.Line2D
 import java.awt.geom.Ellipse2D
 import java.awt.RenderingHints
 import java.awt.GraphicsEnvironment
+import at.ait.dme.forcelayout.ImmutableNode
+import at.ait.dme.forcelayout.Edge
+import at.ait.dme.forcelayout.ImmutableEdge
 
 class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with GraphRenderer {
 
@@ -32,6 +35,8 @@ class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with G
   private var lastMousePos = new Point(0, 0)
   
   private var selectedNode: Option[Node] = None
+  
+  private var currentGraph: (Seq[ImmutableNode], Seq[ImmutableEdge]) = null 
   
   addMouseMotionListener(new MouseAdapter() {
     override def mouseDragged(e: MouseEvent) {
@@ -85,12 +90,13 @@ class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with G
                       RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     }
   
-    render(offscreenGraphics, graph, currentSize.getWidth.toInt, currentSize.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
+    if (currentGraph != null)
+      render(offscreenGraphics, graph, currentGraph._1, currentGraph._2, currentSize.getWidth.toInt, currentSize.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
     g.drawImage(offscreenImage, 0, 0, this)
   }
  
   override def update(g: Graphics) = paint(g)
 
-  def start = graph.doLayout(onComplete = (it => { println("completed in " + it + " iterations"); repaint() }),
-                             onIteration = (it => repaint()))  
+  def start = graph.doLayout(onComplete = ((it, nodes, edges) => { println("completed in " + it + " iterations"); repaint() }),
+                             onIteration = ((it, nodes, edges) => { currentGraph = (nodes, edges); repaint() }))  
 }

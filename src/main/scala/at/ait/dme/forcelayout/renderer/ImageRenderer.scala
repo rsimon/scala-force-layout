@@ -27,7 +27,7 @@ object ImageRenderer extends GraphRenderer {
         RenderingHints.KEY_FRACTIONALMETRICS,
         RenderingHints.VALUE_FRACTIONALMETRICS_ON)
 
-    render(g, graph, width, height)
+    // render(g, graph, width, height)
     
     image
   }

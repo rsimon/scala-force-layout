@@ -32,7 +32,7 @@ object HelloWorld extends App {
   frame.setVisible(true);
   
   graph.doLayout(
-      onComplete = (it => println("completed in " + it + " iterations")),
-      onIteration = (it => imgLabel.setIcon(new ImageIcon(ImageRenderer.drawGraph(graph, 500, 500)))))
+      onComplete = ((it, nodes, edges) => println("completed in " + it + " iterations")),
+      onIteration = ((it, nodes, edges) => imgLabel.setIcon(new ImageIcon(ImageRenderer.drawGraph(graph, 500, 500)))))
 
 }

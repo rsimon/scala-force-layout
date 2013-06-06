@@ -15,11 +15,25 @@ import at.ait.dme.forcelayout.Springhis code is a port of the Springy JavaScript
  */
 class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
-  /** Parallelizable version of nodes collection**/  
-  private val nodes_parallel = nodes.toParArray  
+  val nodes_parallel = buildGraph(nodes, edges)
   
-  // Hack
-  nodes_parallel.foreach(node => node.mass = 1 + countEdges(node) / 3)
+  private def buildGraph(nodes: Seq[Node], edges: Seq[Edge]) = {
+    print("Building in-memory graph...")
+    
+    val inLinks = edges.groupBy(_.to.id)
+    val outLinks = edges.groupBy(_.from.id)
+    
+    nodes.par.map(n => {
+      val in = inLinks.get(n.id)
+      val out = outLinks.get(n.id)
+      
+      // Adjust node mass
+      n.mass = 1 + (in.size + out.size).toDouble / 3
+      
+      // Tuple (node: Node, inlinks: Seq[Edge], outlinks: Seq[Edge])
+      (n, inLinks.get(n.id).getOrElse(Seq.empty[Edge]), outLinks.get(n.id).getOrElse(Seq.empty[Edge]))
+    })
+  }
   
   /** Repulsion constant **/
   private val REPULSION = -1.2
@@ -46,12 +60,12 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private val THETA = 0.8
       
   private def step = {    
-    computeHookesLaw(edges)
-    computeBarnesHut(nodes)
-    computeDrag(nodes)
-    computeGravity(nodes)
+    computeHookesLaw()
+    computeBarnesHut()
+    computeDrag()
+    computeGravity()
 
-    nodes_parallel.foreach(node => { 
+    nodes_parallel.foreach{ case(node, in, out) => { 
       val acceleration = node.state.force / node.mass
       node.state.force = Vector2D(0, 0)
             
@@ -60,10 +74,10 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
         node.state.velocity = node.state.velocity.normalize * MAX_VELOCITY
        
       node.state.pos += node.state.velocity * TIMESTEP 
-    })
+    }}
   }
 
-  private def computeBarnesHut(nodes: Seq[Node]) = {
+  private def computeBarnesHut() = {
     
     val quadtree = new QuadTree(bounds, nodes.map(n => Body(n.state.pos, Some(n))))
         
@@ -94,26 +108,30 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
       }
     }
       
-    nodes_parallel.foreach(node => apply(node, quadtree.root))
+    nodes_parallel.foreach(node => apply(node._1, quadtree.root))
   }
   
-  private def computeDrag(nodes: Seq[Node]) = nodes_parallel.foreach(node => node.state.force += node.state.velocity * DRAG)
+  private def computeDrag() = nodes_parallel.foreach(node => node._1.state.force += node._1.state.velocity * DRAG)
   
-  private def computeGravity(nodes: Seq[Node]) = nodes_parallel.foreach(node => node.state.force += node.state.pos.normalize * CENTER_GRAVITY * node.mass)
+  private def computeGravity() = nodes_parallel.foreach(node => node._1.state.force += node._1.state.pos.normalize * CENTER_GRAVITY * node._1.mass)
   
-  private def computeHookesLaw(edges: Seq[Edge]) = edges.foreach(edge => {
-    val d = if (edge.to.state.pos == edge.from.state.pos)
-        Vector2D.random(0.1, edge.from.state.pos)
-      else
-        edge.to.state.pos - edge.from.state.pos
-
-    val displacement = d.magnitude - SPRING_LENGTH / edge.weight
-    val coeff = SPRING_COEFFICIENT * displacement / d.magnitude   
-    val force = d * coeff * 0.5
-      
-    edge.from.state.force += force
-    edge.to.state.force -= force
-  })
+  private def computeHookesLaw() = {    
+    def computeForce(edge: Edge) = {
+      val d = if (edge.to.state.pos == edge.from.state.pos)
+                   Vector2D.random(0.1, edge.from.state.pos)
+              else
+                   edge.to.state.pos - edge.from.state.pos
+                   
+      val displacement = d.magnitude - SPRING_LENGTH / edge.weight
+      val coeff = SPRING_COEFFICIENT * displacement / d.magnitude   
+      d * coeff * 0.5
+    }
+    
+    nodes_parallel.foreach{ case (node, in, out) => {
+      in.foreach(inEdge => node.state.force -= computeForce(inEdge))
+      out.foreach(outEdge => node.state.force += computeForce(outEdge))
+    }}  
+  }
   
   def bounds = {
     val positions = nodes.map(n => (n.state.pos.x, n.state.pos.y))
@@ -132,25 +150,20 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
 	}).fold(0.0)(_ + _) 
   }
   
-  def countEdges(node: Node) = {
-    // TODO optimize!
-    edges.count(edge => edge.from == node || edge.to == node)
-  }
-  
   def getNearestNode(pt: Vector2D) = nodes.map(node => (node, (node.state.pos - pt).magnitude)).sortBy(_._2).head._1
 
-  def doLayout(onComplete: (Int => Unit) = null, onIteration: (Int => Unit) = null, maxIterations: Int = 1000): Unit = {
+  def doLayout(onComplete: ((Int, Seq[ImmutableNode], Seq[ImmutableEdge]) => Unit) = null, onIteration: ((Int, Seq[ImmutableNode], Seq[ImmutableEdge]) => Unit) = null, maxIterations: Int = 1000): Unit = {
     var it = 0
     do { 
       step
       
       if (onIteration != null)
-        onIteration(it)
+        onIteration(it, nodes.map(_.immutable), edges.map(e => new ImmutableEdge(e.from.immutable, e.to.immutable, e.weight)))
       it += 1
     } while (totalEnergy > 0.001 && it < maxIterations)
       
     if (onComplete != null)
-      onComplete(it)
+      onComplete(it, nodes.map(_.immutable), edges.map(e => new ImmutableEdge(e.from.immutable, e.to.immutable, e.weight)))
   }
   
 }

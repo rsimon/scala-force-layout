@@ -56,11 +56,11 @@ class InteractiveGraphRenderer(graph: SpringGraph) extends JLabel with GraphRend
         RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     
     val bounds = g.getClipBounds
-    render(g2d, graph, bounds.getWidth.toInt, bounds.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
+    // render(g2d, graph, bounds.getWidth.toInt, bounds.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
   }
   
-  def start = graph.doLayout(onComplete = (it => { println("completed in " + it + " iterations"); repaint() }),
-                             onIteration = (it => repaint()))  
+  def start = graph.doLayout(onComplete = ((it, nodes, edges) => { println("completed in " + it + " iterations"); repaint() }),
+                             onIteration = ((it, nodes, edges) => repaint()))  
 
 }
 

@@ -70,8 +70,8 @@ class OpenGLInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with Gra
   def start = {
     createBufferStrategy(2)
     strategy = getBufferStrategy
-    graph.doLayout(onComplete = (it => { println("completed in " + it + " iterations"); doPaint(strategy) }),
-                   onIteration = (it => doPaint(strategy))) 
+    graph.doLayout(onComplete = ((it, nodes, edges) => { println("completed in " + it + " iterations"); doPaint(strategy) }),
+                   onIteration = ((it, nodes, edges) => doPaint(strategy))) 
   }
 
   def doPaint(strategy: BufferStrategy): Unit = {
@@ -84,7 +84,7 @@ class OpenGLInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with Gra
         RenderingHints.VALUE_FRACTIONALMETRICS_ON)
     
     val bounds = getSize
-    render(g2d, graph, bounds.getWidth.toInt, bounds.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
+    // render(g2d, graph, bounds.getWidth.toInt, bounds.getHeight.toInt, selectedNode, currentXOffset, currentYOffset, currentZoom)
     g2d.dispose
     strategy.show
   }

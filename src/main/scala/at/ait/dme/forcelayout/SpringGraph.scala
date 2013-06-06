@@ -4,6 +4,7 @@ import at.ait.dme.forcelayout.quadtree.QuadTree
 import at.ait.dme.forcelayout.quadtree.Quad
 import at.ait.dme.forcelayout.quadtree.Body
 import scala.concurrent._
+import scala.collection.parallel.mutable.ParArray
 
 /**
  * A graph layout implementaimport scala.concurrent._
@@ -17,9 +18,6 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   /** Parallelizable version of nodes collection**/  
   private val nodes_parallel = nodes.toParArray  
-  
-  // Hack
-  nodes_parallel.foreach(node => node.mass = 1 + countEdges(node) / 3)
   
   /** Repulsion constant **/
   private val REPULSION = -1.2
@@ -44,6 +42,19 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   /** Barnes-Hut Theta Threshold **/
   private val THETA = 0.8
+  
+  adjustWeights(nodes_parallel, edges)
+  
+  private def adjustWeights(nodes: ParArray[Node], edges: Seq[Edge]) = {    
+    val inLinks = edges.groupBy(_.to.id)
+    val outLinks = edges.groupBy(_.from.id)
+    
+    nodes.foreach(n => {
+      val in = inLinks.get(n.id)
+      val out = outLinks.get(n.id)
+      n.mass = 1 + (in.size + out.size).toDouble / 3
+    })
+  }
       
   private def step = {    
     computeHookesLaw(edges)

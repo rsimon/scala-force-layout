@@ -32,20 +32,20 @@ private[renderer] trait GraphRenderer {
     graph.edges.foreach(e => {
       val from = (c * e.from.state.pos.x + dx, c * e.from.state.pos.y + dy)
       val to = (c * e.to.state.pos.x + dx, c * e.to.state.pos.y + dy)
-      val width = Math.max(2, Math.min(8, e.weight)).toInt / 2
+      val width = Math.min(4, Math.max(2, Math.min(8, e.weight)).toInt / 2)
     
       g2d.setStroke(new BasicStroke(width));
       g2d.setColor(new Color(198, 198, 198, 198))  
       g2d.drawLine(from._1.toInt, from._2.toInt, to._1.toInt, to._2.toInt)
     })
     
-    val size = 7
-    graph.nodes.map(n => (c * n.state.pos.x + dx - size / 2, c * n.state.pos.y + dy - size / 2, n.group))
+    graph.nodes.map(n => (c * n.state.pos.x + dx, c * n.state.pos.y + dy, n.mass, n.group))
       .filter(pt => pt._1 > 0 && pt._2 > 0)
       .filter(pt => pt._1 <= width && pt._2 <= height)
       .foreach(pt => {      
-        g2d.setColor(palette(pt._3 % palette.size))
-        g2d.fill(new Ellipse2D.Double(pt._1, pt._2, size, size))
+        val size = Math.max(3, Math.min(10, Math.log(pt._3) + 1))
+        g2d.setColor(palette(pt._4 % palette.size))
+        g2d.fill(new Ellipse2D.Double(pt._1 - size / 2, pt._2 - size / 2, size, size))
       })
       
     if (selectedNode.isDefined) {

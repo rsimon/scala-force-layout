@@ -66,6 +66,8 @@ private[renderer] trait GraphRenderer {
         g2d.setStroke(new BasicStroke(width));
         g2d.setColor(Color.GREEN)
         g2d.drawLine(from._1.toInt, from._2.toInt, px.toInt, py.toInt)
+        g2d.setColor(Color.BLACK)
+        g2d.drawString(e.from.label, from._1.toInt + 5, from._2.toInt - 2)
       })
       
       // Highlight out-links
@@ -76,6 +78,8 @@ private[renderer] trait GraphRenderer {
         g2d.setStroke(new BasicStroke(width));
         g2d.setColor(Color.RED)
         g2d.drawLine(px.toInt, py.toInt, to._1.toInt, to._2.toInt)
+        g2d.setColor(Color.BLACK)
+        g2d.drawString(e.to.label, to._1.toInt + 5, to._2.toInt - 2)
       })
       
       g2d.setColor(Color.BLACK);

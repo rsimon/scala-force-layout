@@ -32,7 +32,7 @@ private[renderer] trait GraphRenderer {
     val c = computeScale(graph, width, height) * zoom
     val (dx, dy) = (width / 2 + offsetX, height / 2 + offsetY)
     
-    graph.edges.foreach(e => {
+    edges.foreach(e => {
       val from = (c * e.from.state.pos.x + dx, c * e.from.state.pos.y + dy)
       val to = (c * e.to.state.pos.x + dx, c * e.to.state.pos.y + dy)
       val width = Math.min(4, Math.max(2, Math.min(8, e.weight)).toInt / 2)
@@ -42,7 +42,7 @@ private[renderer] trait GraphRenderer {
       g2d.drawLine(from._1.toInt, from._2.toInt, to._1.toInt, to._2.toInt)
     })
     
-    graph.nodes.map(n => (c * n.state.pos.x + dx, c * n.state.pos.y + dy, n.mass, n.group))
+    nodes.map(n => (c * n.state.pos.x + dx, c * n.state.pos.y + dy, n.mass, n.group))
       .filter(pt => pt._1 > 0 && pt._2 > 0)
       .filter(pt => pt._1 <= width && pt._2 <= height)
       .foreach(pt => {      

@@ -5,6 +5,7 @@ import at.ait.dme.forcelayout.quadtree.Quad
 import at.ait.dme.forcelayout.quadtree.Body
 import scala.concurrent._
 import scala.collection.parallel.mutable.ParArray
+import scala.collection.parallel.ParSeq
 
 /**
  * A graph layout implementaimport scala.concurrent._
@@ -25,31 +26,16 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
     val outLinks = edges.groupBy(_.from.id)
     
     nodes.par.map(n => {
-      val in = inLinks.get(n.id)
-      val out = outLinks.get(n.id)
+      val in = inLinks.get(n.id).getOrElse(Seq.empty[Edge])
+      val out = outLinks.get(n.id).getOrElse(Seq.empty[Edge])
       
       // Adjust node mass
       n.mass = 1 + (in.size + out.size).toDouble / 3
       
       // Tuple (node: Node, inlinks: Seq[Edge], outlinks: Seq[Edge])
-      (n, inLinks.get(n.id).getOrElse(Seq.empty[Edge]), outLinks.get(n.id).getOrElse(Seq.empty[Edge]))
-    })
+      (n, in, out)
+    })    
   }
-  
-  /*
-  adjustWeights(nodes_parallel, edges)
-  
-  private def adjustWeights(nodes: ParArray[Node], edges: Seq[Edge]) = {    
-    val inLinks = edges.groupBy(_.to.id)
-    val outLinks = edges.groupBy(_.from.id)
-    
-    nodes.foreach(n => {
-      val in = inLinks.get(n.id)
-      val out = outLinks.get(n.id)
-      n.mass = 1 + (in.size + out.size).toDouble / 3
-    })
-  }
-  */
   
   /** Repulsion constant **/
   private val REPULSION = -1.2
@@ -133,11 +119,10 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   private def computeHookesLaw() = {    
     def computeForce(edge: Edge) = {
-      val d = if (edge.to.state.pos == edge.from.state.pos)
-                   Vector2D.random(0.1, edge.from.state.pos)
-              else
-                   edge.to.state.pos - edge.from.state.pos
-                   
+      if (edge.to.state.pos == edge.from.state.pos)
+        edge.to.state.pos = edge.from.state.pos + Vector2D.random(0.01)
+      
+      val d = edge.to.state.pos - edge.from.state.pos      
       val displacement = d.magnitude - SPRING_LENGTH / edge.weight
       val coeff = SPRING_COEFFICIENT * displacement / d.magnitude   
       d * coeff * 0.5

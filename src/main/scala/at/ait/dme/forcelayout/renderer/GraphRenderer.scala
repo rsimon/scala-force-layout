@@ -32,7 +32,7 @@ private[renderer] trait GraphRenderer {
     val c = computeScale(graph, width, height) * zoom
     val (dx, dy) = (width / 2 + offsetX, height / 2 + offsetY)
     
-    edges.foreach(e => {
+    graph.edges.foreach(e => {
       val from = (c * e.from.state.pos.x + dx, c * e.from.state.pos.y + dy)
       val to = (c * e.to.state.pos.x + dx, c * e.to.state.pos.y + dy)
       val width = Math.min(4, Math.max(2, Math.min(8, e.weight)).toInt / 2)

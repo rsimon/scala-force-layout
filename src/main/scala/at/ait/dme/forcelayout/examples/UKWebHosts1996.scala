@@ -15,22 +15,22 @@ object UKWebHosts1996 extends App {
 
   print("Reading nodes ")
   val nodes = readGZippedData.map(record => {
-    val from = record(1)
-    val to = record(2).split("\t")(0)
-    Seq(Node(from, from), Node(to, to))  
-  }).flatten.toSeq.groupBy(_.id).mapValues(_.head)
+      val from = record(1)
+      val to = record(2).split("\t")(0)
+      Seq(Node(from, from), Node(to, to))  
+    }).flatten.toSeq.groupBy(_.id).mapValues(_.head)
   println("- " + nodes.size)
   
   print("Reading edges ")
   val edges = readGZippedData.map(record => {
-    val from = nodes.get(record(1))
-    val to = nodes.get(record(2).split("\t")(0))
-    val size = record(2).split("\t")(1).toInt
-    if (from.isDefined && to.isDefined)
-      Edge(from.get, to.get, size)
-    else
-      null
-  }).filter(_ != null).toSeq
+      val from = nodes.get(record(1))
+      val to = nodes.get(record(2).split("\t")(0))
+      val size = record(2).split("\t")(1).toInt
+      if (from.isDefined && to.isDefined)
+        Edge(from.get, to.get, size)
+      else
+        null
+    }).filter(_ != null).toSeq
   println("- " + edges.size)
   val graph = new SpringGraph(nodes.values.toSeq, edges) 
   

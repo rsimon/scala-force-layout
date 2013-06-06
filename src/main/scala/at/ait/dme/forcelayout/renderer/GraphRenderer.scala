@@ -55,11 +55,31 @@ private[renderer] trait GraphRenderer {
     if (selectedNode.isDefined) {
       val n = selectedNode.get
       val size = Math.log(n.mass) + 7
-      val px = c * n.state.pos.x + dx - size / 2
-      val py = c * n.state.pos.y + dy - size / 2
+      val px = c * n.state.pos.x + dx 
+      val py = c * n.state.pos.y + dy
+      
+      // Highlight in-links
+      graph.edges.filter(_.to.id.equals(n.id)).foreach(e => {
+        val from = (c * e.from.state.pos.x + dx, c * e.from.state.pos.y + dy)
+        val width = Math.min(4, Math.max(2, Math.min(8, e.weight)).toInt / 2)
+    
+        g2d.setStroke(new BasicStroke(width));
+        g2d.setColor(Color.GREEN)
+        g2d.drawLine(from._1.toInt, from._2.toInt, px.toInt, py.toInt)
+      })
+      
+      // Highlight out-links
+      graph.edges.filter(_.from.id.equals(n.id)).foreach(e => {
+        val to = (c * e.to.state.pos.x + dx, c * e.to.state.pos.y + dy)
+        val width = Math.min(4, Math.max(2, Math.min(8, e.weight)).toInt / 2)
+    
+        g2d.setStroke(new BasicStroke(width));
+        g2d.setColor(Color.RED)
+        g2d.drawLine(px.toInt, py.toInt, to._1.toInt, to._2.toInt)
+      })
       
       g2d.setColor(Color.BLACK);
-      g2d.draw(new Ellipse2D.Double(px, py, size, size))  
+      g2d.draw(new Ellipse2D.Double(px - size / 2, py - size / 2, size, size))  
       g2d.drawString(n.label, px.toInt + 5, py.toInt - 2)
     }
     

@@ -20,19 +20,19 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   private val nodes_parallel = nodes.toParArray  
   
   /** Repulsion constant **/
-  private val REPULSION = -1.2
+  private var REPULSION = -1.2
   
   /** 'Gravity' constant pulling towards origin **/
-  private val CENTER_GRAVITY = -1e-4
+  private var CENTER_GRAVITY = -1e-4
   
   /** Default spring length **/
-  private val SPRING_LENGTH = 50.0
+  private var SPRING_LENGTH = 50.0
   
   /** Spring stiffness constant **/
-  private val SPRING_COEFFICIENT = 0.0002
+  private var SPRING_COEFFICIENT = 0.0002
       
   /** Drag coefficient **/
-  private val DRAG = -0.02
+  private var DRAG = -0.02
   
   /** Time-step increment **/
   private val TIMESTEP = 20
@@ -45,6 +45,21 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   adjustWeights(nodes_parallel, edges)
   
+  def repulsion = REPULSION
+  def repulsion_=(value: Double) = REPULSION = value
+
+  def centerGravity = CENTER_GRAVITY
+  def centerGravity_=(value: Double) = CENTER_GRAVITY = value
+  
+  def springCoefficient = SPRING_COEFFICIENT
+  def springCoefficient_=(value: Double) = SPRING_COEFFICIENT = value
+  
+  def springLength = SPRING_LENGTH
+  def springLength_=(value: Double) = SPRING_LENGTH = value
+
+  def dragCoefficient = DRAG
+  def dragCoefficient_=(value: Double) = DRAG = value
+
   private def adjustWeights(nodes: ParArray[Node], edges: Seq[Edge]) = {    
     val inLinks = edges.groupBy(_.to.id)
     val outLinks = edges.groupBy(_.from.id)

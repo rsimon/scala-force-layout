@@ -81,12 +81,12 @@ examples for complete, working code.
 
 ## Current Version
 
-The current version of _Scala Force Layout_ is 0.3.0. Download the jar for Scala 2.10 here: 
-[scala-force-layout_2.10-0.3.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.3.0.jar),
+The current version of _Scala Force Layout_ is 0.4.0. Download the jar for Scala 2.10 here: 
+[scala-force-layout_2.10-0.4.0.jar](http://rsimon.github.com/files/scala-force-layout_2.10-0.4.0.jar),
 or include it in your SBT project through the Maven Central Repository: 
 
 ```scala
-libraryDependencies += "at.ait.dme.forcelayout" % "scala-force-layout_2.10" % "0.3.0"
+libraryDependencies += "at.ait.dme.forcelayout" % "scala-force-layout_2.10" % "0.4.0"
 ``` 
 
 ## Building From Source & Running the Examples

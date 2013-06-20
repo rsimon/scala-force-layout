@@ -102,12 +102,11 @@ To build a .jar package type ``sbt package``. To generate a project for the
 There are many things on the list - feel free to help out if you care to!
 
 * _"The last thing we need is another graph API."_ // TODO use the [Tinkerpop Blueprints](https://github.com/tinkerpop/blueprints/wiki) graph model
-* _"Mutable state, everywhere."_ // TODO parts of the code are really ugly and need to be made more functional & Scala-idiomatic
+* _"Mutable state, everywhere."_ // TODO parts of the code are really ugly and badly need to be cleaned up, made more functional & Scala-idiomatic
 * _"Speed is of the essence."_ // TODO I tried [Scala's parallel collections](http://docs.scala-lang.org/overviews/parallel-collections/overview.html)
   on parts of the algorithm and that reduced processing time to ~60%. Some locking effects with the UI code seemed
   to eliminate the benefits, though. So - again - an immutable version of the graph would be helpful.
 * _"Where can I click?"_ // TODO create a renderer that produces an interactive graph, complete with draggable nodes and such
-* _"Yeah, but I want my labels pink!"_ // TODO add a mechanism to control node, edge and label style
 * _"Sorry, I don't code."_ // TODO A simple command-line wrapper that opens some [GraphSON](https://github.com/tinkerpop/blueprints/wiki/GraphSON-Reader-and-Writer-Library), 
   with no coding involved, would be nice
 

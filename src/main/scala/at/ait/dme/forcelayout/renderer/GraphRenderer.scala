@@ -30,7 +30,7 @@ private[renderer] trait GraphRenderer {
   private var nodePainter = (nodes: Seq[Node2D], showLabels: Boolean, g2d: Graphics2D) => {
     nodes.foreach(n2d => {
       val (x, y, n) = (n2d.x, n2d.y, n2d.node)
-      val size = Math.max(3, Math.min(10, Math.log(n.mass) + 1))
+      val size = Math.max(6, Math.min(30, Math.log(n.mass) + 1))
       g2d.setColor(palette(n.group % palette.size))
       g2d.fill(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
   

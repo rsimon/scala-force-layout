@@ -10,6 +10,8 @@ import at.ait.dme.forcelayout.SpringGraph
 import at.ait.dme.forcelayout.renderer.BufferedInteractiveGraphRenderer
 import javax.swing.JFrame
 import java.awt.Dimension
+import at.ait.dme.forcelayout.renderer.Edge2D
+import java.awt.Graphics2D
 
 object UKWebHosts1996 extends App {
 
@@ -43,6 +45,10 @@ object UKWebHosts1996 extends App {
   frame.pack()
   frame.setVisible(true)
   
+  println("Omitting edges for faster drawing...")
+  vis.setEdgePainter((edges: Seq[Edge2D], g2d: Graphics2D) => {
+    // Do nothing
+  })
   vis.start
   
   def readGZippedData = 

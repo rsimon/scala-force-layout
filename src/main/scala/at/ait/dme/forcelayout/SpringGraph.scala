@@ -5,6 +5,7 @@ import at.ait.dme.forcelayout.quadtree.Quad
 import at.ait.dme.forcelayout.quadtree.Body
 import scala.concurrent._
 import scala.collection.parallel.mutable.ParArray
+import scala.collection.parallel.ParSeq
 
 /**
  * A graph layout implementaimport scala.concurrent._
@@ -14,11 +15,10 @@ import at.ait.dme.forcelayout.Springhis code is a port of the Springy JavaScript
  * library VivaGraphJS (https://github.com/anvaka/VivaGraphJS).
  * @author Rainer Simon <rainer.simon@ait.ac.at>
  */
-class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
-  
-  /** Parallelizable version of nodes collection**/  
-  private val nodes_parallel = nodes.toParArray  
-  
+class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
+
+  val (nodes, edges) = buildGraph(sourceNodes, sourceEdges)
+    
   /** Repulsion constant **/
   private var REPULSION = -1.2
   
@@ -30,20 +30,18 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   
   /** Spring stiffness constant **/
   private var SPRING_COEFFICIENT = 0.0002
-      
+  
   /** Drag coefficient **/
   private var DRAG = -0.02
   
   /** Time-step increment **/
-  private val TIMESTEP = 20
+  private val TIMESTEP = 10
   
   /** Node velocity limit **/
   private val MAX_VELOCITY = 1.0
   
   /** Barnes-Hut Theta Threshold **/
   private val THETA = 0.8
-  
-  adjustGraph(nodes_parallel, edges)
   
   def repulsion = REPULSION
   def repulsion_=(value: Double) = REPULSION = value
@@ -60,24 +58,36 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   def dragCoefficient = DRAG
   def dragCoefficient_=(value: Double) = DRAG = value
 
-  private def adjustGraph(nodes: ParArray[Node], edges: Seq[Edge]) = {    
-    val inLinks = edges.groupBy(_.to.id)
-    val outLinks = edges.groupBy(_.from.id)
+  private def buildGraph(sourceNodes: Seq[Node], sourceEdges: Seq[Edge]) = {    
+    val inLinkTable = sourceEdges.groupBy(_.to.id)
+    val outLinkTable = sourceEdges.groupBy(_.from.id)
     
-    nodes.foreach(n => {
-      val in = inLinks.get(n.id).map(_.foldLeft(0.0)(_ + _.weight)).getOrElse(0.0)
-      val out = outLinks.get(n.id).map(_.foldLeft(0.0)(_ + _.weight)).getOrElse(0.0)
-      n.mass = 1 + (in + out).toDouble / 3
+    val nodes = sourceNodes.par.map(n => {
+      val inlinks = inLinkTable.get(n.id).getOrElse(Seq.empty[Edge])
+      val outlinks = outLinkTable.get(n.id).getOrElse(Seq.empty[Edge])
+        
+      val mass= 1 + inlinks.foldLeft(0.0)(_ + _.weight) + outlinks.foldLeft(0.0)(_ + _.weight)
+      // val mass = 1 + (inlinks.size + outlinks.size) / 3
+      
+      (n.id -> (Node(n.id, n.label, mass, n.group)))
+    }).seq.toMap
+    
+    val edges = sourceEdges.map(edge => {
+      val fromNode = nodes.get(edge.from.id)
+      val toNode = nodes.get(edge.to.id)
+      Edge(fromNode.get, toNode.get, edge.weight)  
     })
+     
+    (nodes.values.toSeq, edges)
   }
       
-  private def step = {    
+  private def step = { 
     computeHookesLaw(edges)
     computeBarnesHut(nodes)
     computeDrag(nodes)
     computeGravity(nodes)
-
-    nodes_parallel.foreach(node => { 
+    
+    nodes.par.foreach(node => { 
       val acceleration = node.state.force / node.mass
       node.state.force = Vector2D(0, 0)
             
@@ -120,12 +130,12 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
       }
     }
       
-    nodes_parallel.foreach(node => apply(node, quadtree.root))
+    nodes.par.foreach(node => apply(node, quadtree.root))
   }
   
-  private def computeDrag(nodes: Seq[Node]) = nodes_parallel.foreach(node => node.state.force += node.state.velocity * DRAG)
+  private def computeDrag(nodes: Seq[Node]) = nodes.par.foreach(node => node.state.force += node.state.velocity * DRAG)
   
-  private def computeGravity(nodes: Seq[Node]) = nodes_parallel.foreach(node => node.state.force += node.state.pos.normalize * CENTER_GRAVITY * node.mass)
+  private def computeGravity(nodes: Seq[Node]) = nodes.par.foreach(node => node.state.force += node.state.pos.normalize * CENTER_GRAVITY * node.mass)
   
   private def computeHookesLaw(edges: Seq[Edge]) = edges.foreach(edge => {
     val d = if (edge.to.state.pos == edge.from.state.pos)
@@ -142,7 +152,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   })
   
   def bounds = {
-    val positions = nodes.map(n => (n.state.pos.x, n.state.pos.y))
+    val positions = nodes.par.map(n => (n.state.pos.x, n.state.pos.y))
     val minX = positions.minBy(_._1)._1
     val minY = positions.minBy(_._2)._2
     val maxX = positions.maxBy(_._1)._1

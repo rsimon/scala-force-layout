@@ -16,7 +16,7 @@ class QuadTree(bounds: Bounds, bodies: Seq[Body]) {
       Quad(bounds, body.pos, 1, Some(body))
     } else {
       val children = subdivideBounds(bounds)
-        .map(subbounds => build(subbounds, clipBodies(bodies, subbounds)))
+        .map(subbounds => build(subbounds, 	clipBodies(bodies, subbounds)))
       Quad(bounds, computeCenter(bodies), bodies.size, None, Some(children))
     }
   }  

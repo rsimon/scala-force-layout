@@ -7,6 +7,10 @@ import at.ait.dme.forcelayout.Vector2D
 import at.ait.dme.forcelayout.Node
 import at.ait.dme.forcelayout.Edge
 
+class Node2D(val x: Int, val y: Int, val node: Node)
+
+class Edge2D(val from: Node2D, val to: Node2D, val edge: Edge)
+
 private[renderer] trait GraphRenderer {
   
   val palette = Seq(
@@ -23,29 +27,35 @@ private[renderer] trait GraphRenderer {
 
   private var lastCompletion: Long = System.currentTimeMillis
   
-  private var nodePainter = (x: Int, y: Int, n: Node, showLabels: Boolean, g2d: Graphics2D) => {
-    val size = Math.max(3, Math.min(10, Math.log(n.mass) + 1))
-    g2d.setColor(palette(n.group % palette.size))
-    g2d.fill(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
-    if (showLabels) {
-      g2d.setColor(Color.BLACK)
-      g2d.drawString(n.label, x + 5, y - 2)
-    }    
+  private var nodePainter = (nodes: Seq[Node2D], showLabels: Boolean, g2d: Graphics2D) => {
+    nodes.foreach(n2d => {
+      val (x, y, n) = (n2d.x, n2d.y, n2d.node)
+      val size = Math.max(3, Math.min(10, Math.log(n.mass) + 1))
+      g2d.setColor(palette(n.group % palette.size))
+      g2d.fill(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
+  
+      if (showLabels) {
+        g2d.setColor(Color.BLACK)
+        g2d.drawString(n.label, n2d.x + 5, y - 2)
+      }  
+    })
   }
   
-  private var edgePainter = (x1: Int, y1: Int, x2: Int, y2: Int, e: Edge, g2d:Graphics2D) => {
-    val width = Math.min(4, Math.max(2, Math.min(8, e.weight)).toInt / 2)   
-    g2d.setStroke(new BasicStroke(width));
-    g2d.setColor(new Color(198, 198, 198, 198))  
-    g2d.drawLine(x1, y1, x2, y2)
-  }
+  def setNodePainter(painter: (Seq[Node2D], Boolean, Graphics2D) => Unit) =
+    nodePainter = painter
   
-  def setNodePainter(fn: (Int, Int, Node, Boolean, Graphics2D) => Unit) =
-    nodePainter = fn
+  private var edgePainter = (edges: Seq[Edge2D], g2d: Graphics2D) => {
+    edges.foreach(e2d => {
+      val width = Math.min(4, Math.max(2, Math.min(8, e2d.edge.weight)).toInt / 2)   
+      g2d.setStroke(new BasicStroke(width));
+      g2d.setColor(new Color(198, 198, 198, 198))  
+      g2d.drawLine(e2d.from.x, e2d.from.y, e2d.to.x, e2d.to.y)
+    })
+  } 
+  
+  def setEdgePainter(painter: (Seq[Edge2D], Graphics2D) => Unit) =
+    edgePainter = painter
     
-  def setEdgePainter(fn: (Int, Int, Int, Int, Edge, Graphics2D) => Unit) =
-    edgePainter = fn
-  
   def render(g2d: Graphics2D, graph: SpringGraph, width: Int, height: Int, selectedNode: Option[Node] = None, offsetX: Double = 0.0, offsetY: Double = 0.0, zoom: Double = 1.0, showLabels: Boolean = false): Unit = {
     g2d.setColor(Color.WHITE)
     g2d.fillRect(0, 0, width, height)
@@ -53,17 +63,18 @@ private[renderer] trait GraphRenderer {
     val c = computeScale(graph, width, height) * zoom
     val (dx, dy) = (width / 2 + offsetX, height / 2 + offsetY)
     
-    graph.edges.map(e => {
-      val from = (c * e.from.state.pos.x + dx, c * e.from.state.pos.y + dy)
-      val to = (c * e.to.state.pos.x + dx, c * e.to.state.pos.y + dy)
-      (from, to, e)
-    }).foreach{ case(from, to, edge) => edgePainter(from._1.toInt, from._2.toInt, to._1.toInt, to._2.toInt, edge, g2d) }
+    val edges2D = graph.edges.map(e => {
+      val from = new Node2D((c * e.from.state.pos.x + dx).toInt, (c * e.from.state.pos.y + dy).toInt, e.from)
+      val to = new Node2D((c * e.to.state.pos.x + dx).toInt, (c * e.to.state.pos.y + dy).toInt, e.to)
+      new Edge2D(from, to, e)
+    })
+    edgePainter(edges2D, g2d)
     
-    graph.nodes.map(n => (c * n.state.pos.x + dx, c * n.state.pos.y + dy, n))
-      .filter(pt => pt._1 > 0 && pt._2 > 0)
-      .filter(pt => pt._1 <= width && pt._2 <= height)
-      .foreach(pt => nodePainter(pt._1.toInt, pt._2.toInt, pt._3, showLabels, g2d))
-      
+    val nodes2D = graph.nodes.map(n => new Node2D((c * n.state.pos.x + dx).toInt, (c * n.state.pos.y + dy).toInt, n))
+      .filter(n2d => n2d.x > 0 && n2d.y > 0)
+      .filter(n2d => n2d.x <= width && n2d.y <= height)
+    nodePainter(nodes2D, showLabels, g2d)
+          
     if (selectedNode.isDefined) {
       val n = selectedNode.get
       val size = Math.log(n.mass) + 7

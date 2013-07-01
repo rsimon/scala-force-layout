@@ -43,7 +43,7 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   /** Barnes-Hut Theta Threshold **/
   private val THETA = 0.8
   
-  adjustWeights(nodes_parallel, edges)
+  adjustGraph(nodes_parallel, edges)
   
   def repulsion = REPULSION
   def repulsion_=(value: Double) = REPULSION = value
@@ -60,14 +60,14 @@ class SpringGraph(val nodes: Seq[Node], val edges: Seq[Edge]) {
   def dragCoefficient = DRAG
   def dragCoefficient_=(value: Double) = DRAG = value
 
-  private def adjustWeights(nodes: ParArray[Node], edges: Seq[Edge]) = {    
+  private def adjustGraph(nodes: ParArray[Node], edges: Seq[Edge]) = {    
     val inLinks = edges.groupBy(_.to.id)
     val outLinks = edges.groupBy(_.from.id)
     
     nodes.foreach(n => {
-      val in = inLinks.get(n.id)
-      val out = outLinks.get(n.id)
-      n.mass = 1 + (in.size + out.size).toDouble / 3
+      val in = inLinks.get(n.id).map(_.foldLeft(0.0)(_ + _.weight)).getOrElse(0.0)
+      val out = outLinks.get(n.id).map(_.foldLeft(0.0)(_ + _.weight)).getOrElse(0.0)
+      n.mass = 1 + (in + out).toDouble / 3
     })
   }
       

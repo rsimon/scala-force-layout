@@ -117,7 +117,7 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
   private def computeBarnesHut(nodes: Seq[Node], nodes_parallel: ParSeq[Node]) = {
     val quadtree = new QuadTree(bounds, nodes.map(n => Body(n.state.pos, Some(n))))
         
-    def apply(node: Node, quad: Quad): Unit = {
+    def apply(node: Node, quad: Quad[Node]): Unit = {
       val s = (quad.bounds.width + quad.bounds.height) / 2
       val d = (quad.center - node.state.pos).magnitude
       if (s/d > THETA) {

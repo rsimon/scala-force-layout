@@ -1,5 +1,9 @@
 package at.ait.dme.forcelayout
 
+/**
+ * 2D bounds, plus some convenience methods.
+ * @author Rainer Simon <rainer.simon@ait.ac.at>
+ */
 case class Bounds(minX: Double, minY: Double, maxX: Double, maxY: Double) {
   
   lazy val width = maxX - minX

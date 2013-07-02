@@ -29,20 +29,15 @@ object LesMiserables extends App {
   
   val vis = new BufferedInteractiveGraphRenderer(graph)
   
-  val nodePainter = (nodes: Seq[Node2D], showLabels: Boolean, g2d: Graphics2D) => {
+  val nodePainter = (nodes: Seq[Node2D], g2d: Graphics2D) => {
     nodes.foreach(n2d => {
       val (x, y, n) = (n2d.x, n2d.y, n2d.node)
-      val size = Math.max(8, n.mass / 2)
+      val size = 6 + (n.links.size / 2)
       g2d.setColor(vis.palette(n.group % vis.palette.size))
       g2d.fill(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
       g2d.setStroke(new BasicStroke(2));
       g2d.setColor(Color.WHITE)
       g2d.draw(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
-      
-      if (showLabels) {
-        g2d.setColor(Color.BLACK)
-        g2d.drawString(n.label, x + 5, y - 2)
-      } 
     })    
   }
   vis.setNodePainter(nodePainter)

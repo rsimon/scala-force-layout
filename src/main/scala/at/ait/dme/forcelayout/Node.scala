@@ -5,7 +5,19 @@ package at.ait.dme.forcelayout
  * graph node, and a mutable 'state' field, containing the force simulation state. 
  * @author Rainer Simon <rainer.simon@ait.ac.at>
  */
-case class Node(id: String, label: String, mass: Double = 1.0, group: Int = 0, val state: NodeState = NodeState())
+case class Node private[forcelayout] (id: String, label: String, mass: Double, group: Int, inlinks: Seq[Edge], outlinks: Seq[Edge], state: NodeState) {
+  
+  def this(id: String, label: String, mass: Double = 1.0, group: Int = 0) =
+    this(id, label, mass, group, Seq.empty[Edge], Seq.empty[Edge], NodeState())
+    
+  lazy val links = inlinks ++ outlinks
+  
+}
+
+object Node {
+  // Shortcut, so the auxiliary constructor works in the normal case-class way
+  def apply(id: String, label: String, mass: Double = 1.0, group: Int = 0) = new Node(id, label, mass, group)
+}
 
 /**
  * A container for the (mutable) force simulation state of a graph node. 

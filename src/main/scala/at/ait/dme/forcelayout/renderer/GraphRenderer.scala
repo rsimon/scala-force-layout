@@ -27,21 +27,16 @@ private[renderer] trait GraphRenderer {
 
   private var lastCompletion: Long = System.currentTimeMillis
   
-  private var nodePainter = (nodes: Seq[Node2D], showLabels: Boolean, g2d: Graphics2D) => {
+  private var nodePainter = (nodes: Seq[Node2D], g2d: Graphics2D) => {
     nodes.foreach(n2d => {
       val (x, y, n) = (n2d.x, n2d.y, n2d.node)
       val size = Math.max(6, Math.min(30, Math.log(n.mass) + 1))
       g2d.setColor(palette(n.group % palette.size))
       g2d.fill(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
-  
-      if (showLabels) {
-        g2d.setColor(Color.BLACK)
-        g2d.drawString(n.label, n2d.x + 5, y - 2)
-      }  
     })
   }
   
-  def setNodePainter(painter: (Seq[Node2D], Boolean, Graphics2D) => Unit) =
+  def setNodePainter(painter: (Seq[Node2D], Graphics2D) => Unit) =
     nodePainter = painter
   
   private var edgePainter = (edges: Seq[Edge2D], g2d: Graphics2D) => {
@@ -73,7 +68,12 @@ private[renderer] trait GraphRenderer {
     val nodes2D = graph.nodes.map(n => new Node2D((c * n.state.pos.x + dx).toInt, (c * n.state.pos.y + dy).toInt, n))
       .filter(n2d => n2d.x > 0 && n2d.y > 0)
       .filter(n2d => n2d.x <= width && n2d.y <= height)
-    nodePainter(nodes2D, showLabels, g2d)
+    nodePainter(nodes2D, g2d)
+    
+    if (showLabels) {
+      g2d.setColor(Color.BLACK)
+      nodes2D.foreach(n2d => g2d.drawString(n2d.node.label, n2d.x + 5, n2d.y - 2))
+    }  
           
     if (selectedNode.isDefined) {
       val n = selectedNode.get

@@ -61,16 +61,18 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
     val inLinkTable = sourceEdges.groupBy(_.to.id)
     val outLinkTable = sourceEdges.groupBy(_.from.id)
     
-    // Recompute nodes, with corrected mass (and old VivaGraphJS trick)
+    // Recompute nodes, with corrected mass (an old VivaGraphJS trick) and in/outlink data
     val nodes = sourceNodes.par.map(n => {
-      val links: Double =
-        inLinkTable.get(n.id).map(_.size).getOrElse(0) +
-        outLinkTable.get(n.id).map(_.size).getOrElse(0)
+      val inlinks = inLinkTable.get(n.id).getOrElse(Seq.empty[Edge])
+      val outlinks = outLinkTable.get(n.id).getOrElse(Seq.empty[Edge])
+    
+      val links: Double = inlinks.size + outlinks.size
       val mass = n.mass * (1 + links / 3)
-      (n.id -> (Node(n.id, n.label, mass, n.group)))
+      
+      (n.id -> (Node(n.id, n.label, mass, n.group, inlinks, outlinks, NodeState())))
     }).seq.toMap
     
-    // Re-link edges to recomputed nodes
+    // Re-wire edges to recomputed nodes
     val edges = sourceEdges.map(edge => {
       val fromNode = nodes.get(edge.from.id)
       val toNode = nodes.get(edge.to.id)

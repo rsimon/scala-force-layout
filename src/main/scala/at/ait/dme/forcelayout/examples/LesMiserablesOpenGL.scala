@@ -2,8 +2,10 @@ package at.ait.dme.forcelayout.examples
 
 import rapture.io._
 import scala.io.Source
+
 import java.awt.Dimension
 import javax.swing.JFrame
+
 import at.ait.dme.forcelayout.{ Edge, Node, SpringGraph }
 import at.ait.dme.forcelayout.renderer.OpenGLInteractiveGraphRenderer
 

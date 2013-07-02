@@ -1,17 +1,15 @@
 package at.ait.dme.forcelayout.examples
 
 import scala.io.Source
-import java.util.zip.GZIPInputStream
 import java.io.BufferedInputStream
 import java.io.FileInputStream
-import at.ait.dme.forcelayout.Node
-import at.ait.dme.forcelayout.Edge
-import at.ait.dme.forcelayout.SpringGraph
-import at.ait.dme.forcelayout.renderer.BufferedInteractiveGraphRenderer
+import java.util.zip.GZIPInputStream
+
 import javax.swing.JFrame
-import java.awt.Dimension
-import at.ait.dme.forcelayout.renderer.Edge2D
-import java.awt.Graphics2D
+import java.awt.{ Dimension, Graphics2D }
+
+import at.ait.dme.forcelayout.{ Node, Edge, SpringGraph }
+import at.ait.dme.forcelayout.renderer.{ BufferedInteractiveGraphRenderer, Edge2D }
 
 object UKWebHosts1996 extends App {
 
@@ -46,9 +44,7 @@ object UKWebHosts1996 extends App {
   frame.setVisible(true)
   
   println("Omitting edges for faster drawing...")
-  vis.setEdgePainter((edges: Seq[Edge2D], g2d: Graphics2D) => {
-    // Do nothing
-  })
+  vis.setEdgePainter((edges: Seq[Edge2D], g2d: Graphics2D) => { /** Do nothing **/ })
   vis.start
   
   def readGZippedData = 

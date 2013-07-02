@@ -1,10 +1,7 @@
 package at.ait.dme.forcelayout
 
-import at.ait.dme.forcelayout.quadtree.QuadTree
-import at.ait.dme.forcelayout.quadtree.Quad
-import at.ait.dme.forcelayout.quadtree.Body
-import scala.concurrent._
-import scala.collection.parallel.mutable.ParArray
+import at.ait.dme.forcelayout.quadtree.{ Body, Quad, QuadTree }
+
 import scala.collection.parallel.ParSeq
 
 /**

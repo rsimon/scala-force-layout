@@ -2,15 +2,13 @@ package at.ait.dme.forcelayout.examples
 
 import rapture.io._
 import scala.io.Source
-import java.awt.Dimension
+
 import javax.swing.JFrame
-import at.ait.dme.forcelayout.{ Edge, Node, SpringGraph }
-import at.ait.dme.forcelayout.renderer.BufferedInteractiveGraphRenderer
-import java.awt.Graphics2D
+import java.awt.{ BasicStroke, Color, Dimension, Graphics2D }
 import java.awt.geom.Ellipse2D
-import java.awt.Color
-import java.awt.BasicStroke
-import at.ait.dme.forcelayout.renderer.Node2D
+
+import at.ait.dme.forcelayout.{ Edge, Node, SpringGraph }
+import at.ait.dme.forcelayout.renderer.{ BufferedInteractiveGraphRenderer, Node2D }
 
 object LesMiserables extends App {
   

@@ -8,16 +8,13 @@ import scala.collection.parallel.mutable.ParArray
 import scala.collection.parallel.ParSeq
 
 /**
- * A graph layout implementaimport scala.concurrent._
-import ExecutionContext.Implicits.global
-import at.ait.dme.forcelayout.Springhis code is a port of the Springy JavaScript library (http://getspringy.com/) 
- * by Dennis Hotson. But it also mixes in some ideas from Andrei Kashcha's JavaScript 
- * library VivaGraphJS (https://github.com/anvaka/VivaGraphJS).
+ * A force directed graph layout implementation. Parts of this code are ported from the Springy
+ * JavaScript library (http://getspringy.com/) by Dennis Hotson. Physics model parameters are based 
+ * on those used in the JavaScript libary VivaGraphJS (https://github.com/anvaka/VivaGraphJS) by 
+ * Andrei Kashcha. 
  * @author Rainer Simon <rainer.simon@ait.ac.at>
  */
 class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
-
-  val (nodes, edges) = buildGraph(sourceNodes, sourceEdges)
     
   /** Repulsion constant **/
   private var REPULSION = -1.2
@@ -35,7 +32,7 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
   private var DRAG = -0.02
   
   /** Time-step increment **/
-  private val TIMESTEP = 10
+  private val TIMESTEP = 20
   
   /** Node velocity limit **/
   private val MAX_VELOCITY = 1.0
@@ -43,6 +40,11 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
   /** Barnes-Hut Theta Threshold **/
   private val THETA = 0.8
   
+  /** The graph model **/
+  val (nodes, edges) = buildGraph(sourceNodes, sourceEdges)
+  val nodes_parallel = nodes.par
+  
+  /** 'Getters' and 'setters' for physics model parameters **/
   def repulsion = REPULSION
   def repulsion_=(value: Double) = REPULSION = value
 
@@ -62,16 +64,16 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
     val inLinkTable = sourceEdges.groupBy(_.to.id)
     val outLinkTable = sourceEdges.groupBy(_.from.id)
     
+    // Recompute nodes, with corrected mass (and old VivaGraphJS trick)
     val nodes = sourceNodes.par.map(n => {
-      val inlinks = inLinkTable.get(n.id).getOrElse(Seq.empty[Edge])
-      val outlinks = outLinkTable.get(n.id).getOrElse(Seq.empty[Edge])
-        
-      val mass= 1 + inlinks.foldLeft(0.0)(_ + _.weight) + outlinks.foldLeft(0.0)(_ + _.weight)
-      // val mass = 1 + (inlinks.size + outlinks.size) / 3
-      
+      val links: Double =
+        inLinkTable.get(n.id).map(_.size).getOrElse(0) +
+        outLinkTable.get(n.id).map(_.size).getOrElse(0)
+      val mass = n.mass * (1 + links / 3)
       (n.id -> (Node(n.id, n.label, mass, n.group)))
     }).seq.toMap
     
+    // Re-link edges to recomputed nodes
     val edges = sourceEdges.map(edge => {
       val fromNode = nodes.get(edge.from.id)
       val toNode = nodes.get(edge.to.id)
@@ -80,17 +82,16 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
      
     (nodes.values.toSeq, edges)
   }
-      
+  
   private def step = { 
     computeHookesLaw(edges)
-    computeBarnesHut(nodes)
-    computeDrag(nodes)
-    computeGravity(nodes)
+    computeBarnesHut(nodes, nodes_parallel)
+    computeDrag(nodes_parallel)
+    computeGravity(nodes_parallel)
     
-    nodes.par.foreach(node => { 
+    nodes_parallel.foreach(node => { 
       val acceleration = node.state.force / node.mass
       node.state.force = Vector2D(0, 0)
-            
       node.state.velocity += acceleration * TIMESTEP
       if (node.state.velocity.magnitude > MAX_VELOCITY)
         node.state.velocity = node.state.velocity.normalize * MAX_VELOCITY
@@ -98,9 +99,22 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
       node.state.pos += node.state.velocity * TIMESTEP 
     })
   }
+  
+  private def computeHookesLaw(edges: Seq[Edge]) = edges.foreach(edge => {
+    val d = if (edge.to.state.pos == edge.from.state.pos)
+        Vector2D.random(0.1, edge.from.state.pos)
+      else
+        edge.to.state.pos - edge.from.state.pos
 
-  private def computeBarnesHut(nodes: Seq[Node]) = {
-    
+    val displacement = d.magnitude - SPRING_LENGTH / edge.weight
+    val coeff = SPRING_COEFFICIENT * displacement / d.magnitude   
+    val force = d * coeff * 0.5
+      
+    edge.from.state.force += force
+    edge.to.state.force -= force
+  })
+
+  private def computeBarnesHut(nodes: Seq[Node], nodes_parallel: ParSeq[Node]) = {
     val quadtree = new QuadTree(bounds, nodes.map(n => Body(n.state.pos, Some(n))))
         
     def apply(node: Node, quad: Quad): Unit = {
@@ -130,29 +144,15 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
       }
     }
       
-    nodes.par.foreach(node => apply(node, quadtree.root))
+    nodes_parallel.foreach(node => apply(node, quadtree.root))
   }
   
-  private def computeDrag(nodes: Seq[Node]) = nodes.par.foreach(node => node.state.force += node.state.velocity * DRAG)
+  private def computeDrag(nodes: ParSeq[Node]) = nodes.foreach(node => node.state.force += node.state.velocity * DRAG)
   
-  private def computeGravity(nodes: Seq[Node]) = nodes.par.foreach(node => node.state.force += node.state.pos.normalize * CENTER_GRAVITY * node.mass)
-  
-  private def computeHookesLaw(edges: Seq[Edge]) = edges.foreach(edge => {
-    val d = if (edge.to.state.pos == edge.from.state.pos)
-        Vector2D.random(0.1, edge.from.state.pos)
-      else
-        edge.to.state.pos - edge.from.state.pos
-
-    val displacement = d.magnitude - SPRING_LENGTH / edge.weight
-    val coeff = SPRING_COEFFICIENT * displacement / d.magnitude   
-    val force = d * coeff * 0.5
-      
-    edge.from.state.force += force
-    edge.to.state.force -= force
-  })
+  private def computeGravity(nodes: ParSeq[Node]) = nodes.foreach(node => node.state.force += node.state.pos.normalize * CENTER_GRAVITY * node.mass)
   
   def bounds = {
-    val positions = nodes.par.map(n => (n.state.pos.x, n.state.pos.y))
+    val positions = nodes_parallel.map(n => (n.state.pos.x, n.state.pos.y))
     val minX = positions.minBy(_._1)._1
     val minY = positions.minBy(_._2)._2
     val maxX = positions.maxBy(_._1)._1
@@ -161,17 +161,10 @@ class SpringGraph(val sourceNodes: Seq[Node], val sourceEdges: Seq[Edge]) {
     Bounds(minX, minY, maxX, maxY)
   } 
   
-  def totalEnergy = {
-	nodes.map(node => {
+  def totalEnergy = nodes_parallel.map(node => {
 	  val v = node.state.velocity.magnitude
 	  0.5 * node.mass * v * v
 	}).fold(0.0)(_ + _) 
-  }
-  
-  def countEdges(node: Node) = {
-    // TODO optimize!
-    edges.count(edge => edge.from == node || edge.to == node)
-  }
   
   def getNearestNode(pt: Vector2D) = nodes.map(node => (node, (node.state.pos - pt).magnitude)).sortBy(_._2).head._1
 

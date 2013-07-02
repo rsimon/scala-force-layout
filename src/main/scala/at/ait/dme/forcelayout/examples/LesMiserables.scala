@@ -2,13 +2,12 @@ package at.ait.dme.forcelayout.examples
 
 import rapture.io._
 import scala.io.Source
-
 import javax.swing.JFrame
 import java.awt.{ BasicStroke, Color, Dimension, Graphics2D }
 import java.awt.geom.Ellipse2D
-
 import at.ait.dme.forcelayout.{ Edge, Node, SpringGraph }
 import at.ait.dme.forcelayout.renderer.{ BufferedInteractiveGraphRenderer, Node2D }
+import at.ait.dme.forcelayout.renderer.ColorPalette
 
 object LesMiserables extends App {
   
@@ -33,7 +32,7 @@ object LesMiserables extends App {
     nodes.foreach(n2d => {
       val (x, y, n) = (n2d.x, n2d.y, n2d.node)
       val size = 6 + (n.links.size / 2)
-      g2d.setColor(vis.palette(n.group % vis.palette.size))
+      g2d.setColor(ColorPalette.getColor(n.group))
       g2d.fill(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
       g2d.setStroke(new BasicStroke(2));
       g2d.setColor(Color.WHITE)

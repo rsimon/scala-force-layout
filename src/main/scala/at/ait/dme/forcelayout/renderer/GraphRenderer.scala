@@ -12,18 +12,6 @@ class Node2D(val x: Int, val y: Int, val node: Node)
 class Edge2D(val from: Node2D, val to: Node2D, val edge: Edge)
 
 private[renderer] trait GraphRenderer {
-  
-  val palette = Seq(
-      new Color(31, 119, 180),
-      new Color(255, 127, 14),
-      new Color(44, 160, 44),
-      new Color(214, 39, 40),
-      new Color(148, 103, 189),
-      new Color(140, 86, 75),
-      new Color(227, 119, 194),
-      new Color(127, 127, 127),
-      new Color(188, 189, 34),
-      new Color(23, 190, 207))
 
   private var lastCompletion: Long = System.currentTimeMillis
   
@@ -31,7 +19,7 @@ private[renderer] trait GraphRenderer {
     nodes.foreach(n2d => {
       val (x, y, n) = (n2d.x, n2d.y, n2d.node)
       val size = Math.max(6, Math.min(30, Math.log(n.mass) + 1))
-      g2d.setColor(palette(n.group % palette.size))
+      g2d.setColor(ColorPalette.getColor(n.group))
       g2d.fill(new Ellipse2D.Double(x - size / 2, y - size / 2, size, size))
     })
   }

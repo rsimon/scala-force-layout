@@ -2,10 +2,7 @@ package at.ait.dme.forcelayout.renderer
 
 import java.awt._
 import java.awt.geom.Ellipse2D
-import at.ait.dme.forcelayout.SpringGraph
-import at.ait.dme.forcelayout.Vector2D
-import at.ait.dme.forcelayout.Node
-import at.ait.dme.forcelayout.Edge
+import at.ait.dme.forcelayout.{ Node, Edge, SpringGraph, Vector2D }
 
 class Node2D(val x: Int, val y: Int, val node: Node)
 

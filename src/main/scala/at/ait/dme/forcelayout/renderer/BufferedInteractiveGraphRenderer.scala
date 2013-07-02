@@ -1,26 +1,8 @@
 package at.ait.dme.forcelayout.renderer
 
-import java.awt.Canvas
-import java.awt.Image
-import java.awt.Graphics
-import java.awt.Dimension
-import java.awt.Color
-import at.ait.dme.forcelayout.SpringGraph
-import java.awt.Point
-import at.ait.dme.forcelayout.Node
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
-import java.awt.event.MouseWheelListener
-import java.awt.event.MouseWheelEvent
-import at.ait.dme.forcelayout.Vector2D
-import java.awt.Graphics2D
-import java.awt.BasicStroke
-import java.awt.geom.Line2D
-import java.awt.geom.Ellipse2D
-import java.awt.RenderingHints
-import java.awt.GraphicsEnvironment
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
+import java.awt.{ Canvas, Dimension, Image, Graphics, Graphics2D, GraphicsEnvironment, Point, RenderingHints }
+import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseWheelListener, MouseWheelEvent }
+import at.ait.dme.forcelayout.{ Node, SpringGraph }
 
 class BufferedInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with GraphRenderer {
 

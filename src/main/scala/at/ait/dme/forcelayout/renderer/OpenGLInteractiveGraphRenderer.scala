@@ -1,24 +1,9 @@
 package at.ait.dme.forcelayout.renderer
 
-import javax.swing.JLabel
-import java.awt.Graphics
-import java.awt.Color
-import java.awt.image.BufferedImage
-import java.awt.Graphics2D
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseWheelEvent
-import java.awt.event.MouseEvent
-import java.awt.event.MouseWheelListener
-import java.awt.RenderingHints
-import java.awt.Point
-import java.awt.BasicStroke
-import java.awt.geom.Line2D
-import java.awt.geom.Ellipse2D
-import at.ait.dme.forcelayout.Node
-import at.ait.dme.forcelayout.SpringGraph
-import at.ait.dme.forcelayout.Vector2D
-import java.awt.Canvas
+import java.awt.{ Canvas, Graphics2D, Point, RenderingHints }
+import at.ait.dme.forcelayout.{ Node, SpringGraph }
 import java.awt.image.BufferStrategy
+import java.awt.event.{ MouseAdapter, MouseEvent, MouseWheelListener, MouseWheelEvent }
 
 class OpenGLInteractiveGraphRenderer(graph: SpringGraph) extends Canvas with GraphRenderer {
   

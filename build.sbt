@@ -4,7 +4,7 @@ name := "scala-force-layout"
 
 version := "0.4.0"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.11.8"
 
 publishMavenStyle := true
 

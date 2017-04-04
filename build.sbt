@@ -2,7 +2,7 @@ organization := "at.ait.dme.forcelayout"
 
 name := "scala-force-layout"
 
-version := "0.4.0"
+version := "0.4.1-SNAPSHOT"
 
 scalaVersion := "2.11.8"
 
@@ -18,9 +18,9 @@ libraryDependencies ++= Seq(
 // and: https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-8.ReleaseIt
 // Nexus UI is at: https://oss.sonatype.org/
 
-publishTo <<= version { (v: String) =>
+publishTo in ThisBuild := {
   val nexus = "https://oss.sonatype.org/"
-  if (v.trim.endsWith("SNAPSHOT"))
+  if (isSnapshot.value)
     Some("snapshots" at nexus + "content/repositories/snapshots")
   else
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
